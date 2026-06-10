@@ -14,7 +14,7 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
       import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-      import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+      import { getFirestore, doc, setDoc, getDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
       const firebaseConfig = {
         projectId: "gen-lang-client-0348691034",
@@ -31,6 +31,20 @@
       const auth = getAuth(app);
       const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
       const provider = new GoogleAuthProvider();
+
+      // Define standard global Firebase App reference used in downstream scripts
+      window.FirebaseApp = {
+        db,
+        auth,
+        doc,
+        setDoc,
+        getDoc,
+        onSnapshot,
+        signInWithPopup,
+        provider,
+        onAuthStateChanged,
+        signOut
+      };
 
       // Global error handler for Firestore
       function handleFirestoreError(error, operationType, path) {
@@ -76,6 +90,9 @@
         },
         onAuth: (cb) => onAuthStateChanged(auth, cb)
       };
+
+      // Dispatch FirebaseReady to initiate download, syncing, and authentication checking on index.html
+      window.dispatchEvent(new CustomEvent("FirebaseReady"));
     </script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
