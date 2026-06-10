@@ -12,9 +12,9 @@
     />
     <!-- Firebase Script -->
     <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-      import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-      import { getFirestore, doc, setDoc, getDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+      import { initializeApp } from "firebase/app";
+      import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
+      import { getFirestore, doc, setDoc, getDoc, onSnapshot, serverTimestamp } from "firebase/firestore";
 
       const firebaseConfig = {
         projectId: "gen-lang-client-0348691034",
@@ -3040,35 +3040,38 @@
 
       async function renderSatkerDashboard(satkerCode) {
         try {
-          let targetWorkbookBase64Local = await localforage.getItem(
-            "targetWorkbookBase64",
-          );
-          if (window.FirebaseApp && window.FirebaseApp.db) {
-            try {
-              const docSnap = await getDocWithTimeout(
-                window.FirebaseApp.doc(
-                  window.FirebaseApp.db,
-                  "shared_workbooks",
-                  "main_workbook",
-                ),
-                3000,
-              );
-              if (docSnap.exists() && docSnap.data().workbookBase64) {
-                targetWorkbookBase64Local = docSnap.data().workbookBase64;
-              }
-            } catch (e) {
-              console.warn(
-                "Firebase fetch in dashboard failed/timed out, falling back to local storage.",
-                e,
-              );
-            }
-          }
-
           let wb = null;
-          if (targetWorkbookBase64Local) {
-            wb = XLSX.read(targetWorkbookBase64Local, { type: "base64" });
-          } else if (targetWorkbook) {
+          if (targetWorkbook) {
             wb = targetWorkbook;
+          } else {
+            let targetWorkbookBase64Local = await localforage.getItem(
+              "targetWorkbookBase64",
+            );
+            if (window.FirebaseApp && window.FirebaseApp.db) {
+              try {
+                const docSnap = await getDocWithTimeout(
+                  window.FirebaseApp.doc(
+                    window.FirebaseApp.db,
+                    "shared_workbooks",
+                    "main_workbook",
+                  ),
+                  3000,
+                );
+                if (docSnap.exists() && docSnap.data().workbookBase64) {
+                  targetWorkbookBase64Local = docSnap.data().workbookBase64;
+                }
+              } catch (e) {
+                console.warn(
+                  "Firebase fetch in dashboard failed/timed out, falling back to local storage.",
+                  e,
+                );
+              }
+            }
+
+            if (targetWorkbookBase64Local) {
+              wb = XLSX.read(targetWorkbookBase64Local, { type: "base64" });
+              targetWorkbook = wb; // Save to global
+            }
           }
 
           if (!wb) return;
@@ -3664,8 +3667,6 @@
               if (unsubscribeSnapshot) unsubscribeSnapshot();
               checkAuth();
             }, "Click to Sign Out", true);
-
-            startSyncing();
           } else if (satkerCode) {
             if (loginOverlay) loginOverlay.classList.add("hidden");
             if (workspaceKppn) workspaceKppn.classList.add("hidden");
@@ -3696,6 +3697,9 @@
 
             updateAuthUI(`<span>Login required</span>`, null, null, false);
           }
+
+          // Always ensure background live synchronization is running for all roles
+          startSyncing();
         }
 
         const tabLoginSatker = document.getElementById("tab-login-satker");
@@ -3813,6 +3817,7 @@
                 wb = XLSX.read(targetWorkbookBase64Local, {
                   type: "base64",
                 });
+                targetWorkbook = wb; // Save to global state
               } else if (targetWorkbook) {
                 wb = targetWorkbook;
               }
