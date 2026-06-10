@@ -3566,6 +3566,10 @@
                     targetFileName =
                       data.fileName || "Template_Target_Otomatis.xlsx";
 
+                    // Cache to localforage so next page load (even offline/slow) is instant
+                    localforage.setItem("targetWorkbookBase64", data.workbookBase64);
+                    localforage.setItem("targetWorkbookName", targetFileName);
+
                     // Re-render UI
                     if (typeof updateFormulaCaches === "function")
                       updateFormulaCaches();
@@ -3587,6 +3591,12 @@
 
                     renderDashboardAnalytics();
                     checkCanPreview();
+
+                    // If a Satker is logged in, propagate data updates to its dashboard
+                    const satkerCode = localStorage.getItem("satkerLoginCode");
+                    if (satkerCode && typeof renderSatkerDashboard === "function") {
+                      renderSatkerDashboard(satkerCode);
+                    }
                   } catch (e) {
                     console.error(e);
                   }
@@ -3866,10 +3876,12 @@
 
         if (window.FirebaseApp) {
           checkAuth();
+          startSyncing();
         } else {
           window.addEventListener("FirebaseReady", () => {
             console.log("Firebase is ready, updating authentication status...");
             checkAuth();
+            startSyncing();
           });
         }
 
