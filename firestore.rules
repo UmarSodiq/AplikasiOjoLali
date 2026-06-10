@@ -6,6 +6,11 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // Shared Workbooks (for synchronization across devices)
+    match /shared_workbooks/{document} {
+      allow read, write: if true;
+    }
+
     // Helpers
     function isSignedIn() {
       return request.auth != null;
