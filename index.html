@@ -2351,16 +2351,16 @@
         } catch (e) {
           console.error("Debounced save error:", e);
         }
-      }, 5000);
+      }, 1500);
     }
 
     async function saveTargetWorkbookToStorage() {
       if (!targetWorkbook || isSyncingFromServer) return;
       kppnJustSaved = true;
-      // Reset local write flag after 5 seconds
+      // Reset local write flag after 3 seconds
       setTimeout(() => {
         kppnJustSaved = false;
-      }, 5000);
+      }, 3000);
 
       try {
         const outBuffer = XLSX.write(targetWorkbook, {
@@ -2946,8 +2946,8 @@
           ),
           (docSnap) => {
             if (kppnJustSaved) {
-              // Ignore self-triggered remote snapshot events during local KPPN writes
-              kppnJustSaved = false;
+              // Ini update dari diri sendiri, skip render tapi jangan reset flag di sini
+              // (flag akan di-reset otomatis oleh setTimeout setelah 3 detik)
               return;
             }
             if (docSnap.exists() && !docSnap.metadata.hasPendingWrites) {
@@ -2968,6 +2968,11 @@
                   if (data.tolakViolations && (data.tolakViolations.length > 0 || !window.tolakViolations || window.tolakViolations.length === 0)) window.tolakViolations = data.tolakViolations;
                   if (data.pajakViolations && (data.pajakViolations.length > 0 || !window.pajakViolations || window.pajakViolations.length === 0)) window.pajakViolations = data.pajakViolations;
                   if (data.kasTunaiViolations && (data.kasTunaiViolations.length > 0 || !window.kasTunaiViolations || window.kasTunaiViolations.length === 0)) window.kasTunaiViolations = data.kasTunaiViolations;
+
+                  // Re-render tab violations agar Perangkat B langsung tampil datanya
+                  if (typeof window.renderTolakTab === 'function') window.renderTolakTab();
+                  if (typeof window.renderPajakTab === 'function') window.renderPajakTab();
+                  if (typeof window.renderKasTunaiTab === 'function') window.renderKasTunaiTab();
 
                   // Cache to localforage so next page load (even offline/slow) is instant
                   localforage.setItem(("main_workbook") + "_targetWorkbookBase64", data.workbookBase64);
@@ -8411,75 +8416,36 @@
     // Auth UI and Sync Logic
     const btnAuth = document.getElementById("btn-auth");
 
-    let unsubscribeSistem2 = null;
-
     if (window.fbSync) {
-      window.fbSync.onAuth(async (user) => {
+      // Tombol login Google hanya untuk UI label, bukan syarat sinkronisasi data
+      window.fbSync.onAuth((user) => {
         if (user) {
-          btnAuth.innerHTML = `<span>Logout (${user.email.split('@')[0]})</span>`;
-          btnAuth.classList.remove("bg-blue-600", "hover:bg-blue-700");
-          btnAuth.classList.add("bg-slate-600", "hover:bg-slate-700");
-
-          // Listen to state changes real-time (Sistem 2)
-          if (unsubscribeSistem2) unsubscribeSistem2();
-          unsubscribeSistem2 = window.FirebaseApp.onSnapshot(
-            window.FirebaseApp.doc(window.FirebaseApp.db, `users/${user.uid}/data/current`),
-            (docSnap) => {
-              if (docSnap.exists() && !docSnap.metadata.hasPendingWrites) {
-                const savedData = docSnap.data();
-                window.tolakViolations = savedData.tolakViolations || [];
-                window.pajakViolations = savedData.pajakViolations || [];
-                window.kasTunaiViolations = savedData.kasTunaiViolations || [];
-                window.allSatkerDataRaw = savedData.allSatkerDataRaw || [];
-                window.latestLpjMonthStr = savedData.latestLpjMonthStr || "";
-                window.lastResultsForUI = savedData.lastResultsForUI || [];
-                window.lastViolationsData = savedData.lastViolationsData || null;
-
-                // Refresh UI if we have data
-                if (window.tolakViolations.length > 0 || window.lastResultsForUI.length > 0) {
-                  window.disableFbSyncSave = true;
-                  renderDashboardAnalytics();
-                  window.disableFbSyncSave = false;
-
-                  const dashboard = document.getElementById("analytics-dashboard");
-                  if (dashboard) {
-                    dashboard.classList.remove("hidden");
-                    dashboard.classList.remove("is-collapsed");
-                  }
-
-                  // Re-render active result tabs
-                  if (window.activeResultTab && window.activeResultTab !== 'AUTO') {
-                    if (typeof window.switchResultTab === 'function') {
-                      window.switchResultTab(window.activeResultTab);
-                    }
-                  } else if (window.activeResultTab === 'AUTO') {
-                    if (typeof renderResultList === 'function') renderResultList();
-                  }
-                }
-              }
-            }
-          );
-        } else {
-          if (unsubscribeSistem2) {
-            unsubscribeSistem2();
-            unsubscribeSistem2 = null;
+          if (btnAuth) {
+            btnAuth.innerHTML = `<span>Logout (${user.email.split('@')[0]})</span>`;
+            btnAuth.classList.remove("bg-blue-600", "hover:bg-blue-700");
+            btnAuth.classList.add("bg-slate-600", "hover:bg-slate-700");
           }
-          btnAuth.innerHTML = `<span>Login for Sync</span>`;
-          btnAuth.classList.add("bg-blue-600", "hover:bg-blue-700");
-          btnAuth.classList.remove("bg-slate-600", "hover:bg-slate-700");
+        } else {
+          if (btnAuth) {
+            btnAuth.innerHTML = `<span>Login for Sync</span>`;
+            btnAuth.classList.add("bg-blue-600", "hover:bg-blue-700");
+            btnAuth.classList.remove("bg-slate-600", "hover:bg-slate-700");
+          }
         }
       });
 
-      btnAuth.addEventListener("click", () => {
-        if (window.fbSync.auth.currentUser) {
-          window.fbSync.logout();
-        } else {
-          window.fbSync.signIn().catch(e => {
-            console.error("Login failed:", e);
-            showError("Gagal login: " + e.message);
-          });
-        }
-      });
+      if (btnAuth) {
+        btnAuth.addEventListener("click", () => {
+          if (window.fbSync.auth.currentUser) {
+            window.fbSync.logout();
+          } else {
+            window.fbSync.signIn().catch(e => {
+              console.error("Login failed:", e);
+              showError("Gagal login: " + e.message);
+            });
+          }
+        });
+      }
     }
 
     // Hook into data processing to save state
@@ -8487,20 +8453,10 @@
     renderDashboardAnalytics = function () {
       originalRenderDashboard();
 
-      // Save to Firebase if logged in
-      if (window.disableFbSyncSave) return;
-      if (window.fbSync && window.fbSync.auth.currentUser) {
-        window.fbSync.saveState({
-          tolakViolations: window.tolakViolations,
-          pajakViolations: window.pajakViolations,
-          kasTunaiViolations: window.kasTunaiViolations,
-          allSatkerDataRaw: window.allSatkerDataRaw,
-          latestLpjMonthStr: window.latestLpjMonthStr,
-          lastResultsForUI: window.lastResultsForUI,
-          lastViolationsData: window.lastViolationsData || null
-        });
-      }
+      // Violations sudah ikut tersimpan di saveTargetWorkbookToStorage via shared_workbooks/main_workbook
+      // Tidak perlu double-save ke users/{uid} lagi
     };
+
     const themeSunBtn = document.getElementById("theme-sun-btn");
     const themeMoonBtn = document.getElementById("theme-moon-btn");
 
