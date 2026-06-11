@@ -534,8 +534,8 @@
   <div id="login-overlay" class="fixed inset-0 bg-slate-50 z-[100] flex flex-col items-center justify-center p-6">
     <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 max-w-sm w-full text-center">
       <div class="flex justify-center mb-6">
-        <img src="./ojolalilogo-removebg-preview.png" alt="Logo Aplikasi Ojo Lali" class="h-24 w-auto object-contain"
-          id="login-logo-img" />
+        <img src="public/ojolalilogo-removebg-preview.png" alt="Logo Aplikasi Ojo Lali"
+          class="h-24 w-auto object-contain" id="login-logo-img" />
       </div>
       <p class="text-slate-500 mb-6">Silakan masuk dengan Kode Satker Anda.</p>
       <div class="flex mb-6 border-b border-slate-200">
@@ -600,7 +600,7 @@
     class="w-64 flex-shrink-0 bg-bgCard border-r border-border flex flex-col h-full z-20 transition-all duration-300">
     <div class="h-16 flex items-center px-6 border-b border-border">
       <div class="font-bold text-lg text-primary flex items-center gap-2">
-        <img src="./ojolalilogo-removebg-preview.png" alt="Ojo Lali Logo" class="h-8 w-auto object-contain"
+        <img src="public/ojolalilogo-removebg-preview.png" alt="Ojo Lali Logo" class="h-8 w-auto object-contain"
           id="sidebar-logo-img" />
       </div>
     </div>
@@ -630,28 +630,6 @@
       <a href="#" onclick="document.getElementById('workspace-satker').scrollIntoView({behavior: 'smooth'})"
         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold bg-indigo-50 text-indigo-700 transition-colors">
         Dashboard Satker
-      </a>
-      <a href="#"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-50 transition-colors opacity-60 cursor-not-allowed"
-        title="Segera Hadir">
-        Riwayat Nilai
-      </a>
-
-      <div class="mt-4 mb-2 px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Dukungan</div>
-      <a href="#" onclick="alert('Membuka Panduan Teknis LPJ...')"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-50 transition-colors">
-        Panduan Teknis LPJ
-      </a>
-      <a href="https://wa.me/your-number" target="_blank"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-50 transition-colors">
-        Hubungi Helpdesk
-      </a>
-
-      <hr class="my-2 border-border" />
-      <a href="#"
-        onclick="localStorage.removeItem('satkerLoginCode'); if (typeof checkAuth === 'function') checkAuth();"
-        class="sidebar-menu-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-rose-600 hover:bg-rose-50 transition-colors">
-        Logout (Keluar)
       </a>
     </div>
     <div class="px-4 py-4 border-t border-border mt-auto flex flex-col gap-3">
@@ -710,651 +688,309 @@
       </div>
     </header>
 
-    <main id="workspace-kppn" class="flex-1 flex flex-col min-h-0 w-full overflow-hidden relative">
-      <!-- Error/Status Messages (Toasts) -->
-      <div id="toast-container" class="fixed top-6 right-6 z-50 flex flex-col gap-3 pointer-events-none">
-        <div id="message-container"
-          class="hidden pointer-events-auto rounded-lg p-4 bg-red-50 text-red-700 border border-red-200 shadow-lg transform transition-all duration-300 translate-x-0 opacity-100 max-w-sm w-full">
-          <div class="flex items-start gap-3">
-            <svg id="toast-icon-error" class="shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-              stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" x2="12" y1="8" y2="12" />
-              <line x1="12" x2="12.01" y1="16" y2="16" />
-            </svg>
-            <svg id="toast-icon-success" class="shrink-0 mt-0.5 hidden text-green-600"
-              xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-            <span id="message-text" class="text-sm font-medium leading-snug flex-1"></span>
-          </div>
-        </div>
-      </div>
-
-      <div id="page-dashboard" class="flex flex-col gap-6 w-full h-full overflow-y-auto p-4 md:p-6 pb-12">
-        <div id="preview-warning"
-          class="hidden bg-yellow-50 text-yellow-800 p-4 rounded-lg border border-yellow-200 text-sm flex items-start gap-3 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-          <svg class="shrink-0 mt-0.5 text-yellow-600" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+  <main id="workspace-kppn" class="flex-1 flex flex-col min-h-0 w-full overflow-hidden relative">
+    <!-- Error/Status Messages (Toasts) -->
+    <div id="toast-container" class="fixed top-6 right-6 z-50 flex flex-col gap-3 pointer-events-none">
+      <div id="message-container"
+        class="hidden pointer-events-auto rounded-lg p-4 bg-red-50 text-red-700 border border-red-200 shadow-lg transform transition-all duration-300 translate-x-0 opacity-100 max-w-sm w-full">
+        <div class="flex items-start gap-3">
+          <svg id="toast-icon-error" class="shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round">
-            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-            <path d="M12 9v4" />
-            <path d="M12 17h.01" />
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" x2="12" y1="8" y2="12" />
+            <line x1="12" x2="12.01" y1="16" y2="16" />
           </svg>
+          <svg id="toast-icon-success" class="shrink-0 mt-0.5 hidden text-green-600" xmlns="http://www.w3.org/2000/svg"
+            width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+          <span id="message-text" class="text-sm font-medium leading-snug flex-1"></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-dashboard" class="flex flex-col gap-6 w-full h-full overflow-y-auto p-4 md:p-6 pb-12">
+      <div id="preview-warning"
+        class="hidden bg-yellow-50 text-yellow-800 p-4 rounded-lg border border-yellow-200 text-sm flex items-start gap-3 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+        <svg class="shrink-0 mt-0.5 text-yellow-600" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+          <path d="M12 9v4" />
+          <path d="M12 17h.01" />
+        </svg>
+        <div>
+          <strong class="font-bold">Peringatan Multi-Periode!</strong>
+          Ditemukan data dari bulan/periode yang berbeda dalam satu file.
+          VLOOKUP mungkin error jika data bulan yang salah masuk (misal:
+          susulan bulan lalu). Silakan hapus data bulan yang tidak relevan
+          di daftar Ringkasan Data sebelum memproses.
+        </div>
+      </div>
+      <div class="max-w-[1600px] mx-auto w-full flex flex-col gap-6">
+        <div id="dashboard-result-card"
+          class="hidden items-center gap-4 bg-green-50 p-4 rounded-lg border border-green-200 shadow-sm">
+          <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+            <svg class="text-green-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
           <div>
-            <strong class="font-bold">Peringatan Multi-Periode!</strong>
-            Ditemukan data dari bulan/periode yang berbeda dalam satu file.
-            VLOOKUP mungkin error jika data bulan yang salah masuk (misal:
-            susulan bulan lalu). Silakan hapus data bulan yang tidak relevan
-            di daftar Ringkasan Data sebelum memproses.
+            <h2 class="text-lg font-bold text-green-800">
+              Pemrosesan Selesai
+            </h2>
+            <p id="result-subtitle" class="text-sm text-green-700 mt-1"></p>
           </div>
         </div>
-        <div class="max-w-[1600px] mx-auto w-full flex flex-col gap-6">
-          <div id="dashboard-result-card"
-            class="hidden items-center gap-4 bg-green-50 p-4 rounded-lg border border-green-200 shadow-sm">
-            <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-              <svg class="text-green-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </div>
+        <!-- Upload Section -->
+        <div id="upload-section" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- LPJ File Upload -->
+          <div
+            class="bg-bgCard border border-border shadow-[0_1px_3px_rgba(0,0,0,0.05)] p-4 rounded-lg flex items-center justify-between gap-4 transition-all hover:shadow-md">
             <div>
-              <h2 class="text-lg font-bold text-green-800">
-                Pemrosesan Selesai
-              </h2>
-              <p id="result-subtitle" class="text-sm text-green-700 mt-1"></p>
-            </div>
-          </div>
-          <!-- Upload Section -->
-          <div id="upload-section" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- LPJ File Upload -->
-            <div
-              class="bg-bgCard border border-border shadow-[0_1px_3px_rgba(0,0,0,0.05)] p-4 rounded-lg flex items-center justify-between gap-4 transition-all hover:shadow-md">
-              <div>
-                <div class="flex items-center gap-2 mb-1">
-                  <h2 class="text-sm font-bold text-textMain flex items-center gap-2">
-                    File Data LPJ
-                  </h2>
-                </div>
-                <p class="text-[0.7rem] text-textMuted mb-2">
-                  Upload laporan LPJ bulanan (.xlsx)
-                </p>
-                <span id="name-lpj"
-                  class="text-[0.7rem] text-primary break-all font-medium flex items-center gap-1">Belum ada file
-                  dipilih</span>
-              </div>
-
-              <label id="drop-lpj"
-                class="shrink-0 flex items-center justify-center px-4 py-2 rounded-md cursor-pointer border border-dashed border-border bg-bgHover hover:bg-bgLightBlue hover:border-secondary transition-colors group">
-                <svg class="text-slate-500 mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                  stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" x2="12" y1="3" y2="15" />
-                </svg>
-                <span class="text-sm font-semibold text-textMain group-hover:text-primary transition-colors">Unggah
-                  File</span>
-                <input type="file" id="input-lpj" class="hidden" accept=".xlsx,.csv" />
-              </label>
-            </div>
-
-
-
-
-            <!-- Penalti File Upload -->
-            <div
-              class="bg-bgCard border border-border shadow-[0_1px_3px_rgba(0,0,0,0.05)] p-4 rounded-lg flex items-center justify-between gap-4 transition-all hover:shadow-md relative overflow-hidden">
-              <div>
-                <div class="flex items-center gap-2 mb-1">
-                  <h2 class="text-sm font-bold text-red-700 flex items-center gap-2">
-                    File Data Penalti
-                  </h2>
-                  <span class="text-[0.65rem] bg-red-100 text-red-700 px-1.5 py-0.5 rounded-full font-medium">Semua
-                    Penalti (Opsional)</span>
-                </div>
-                <p class="text-[0.7rem] text-textMuted mb-2">
-                  Upload file data Penalti (.xlsx/.csv)
-                </p>
-                <span id="name-penalti"
-                  class="text-[0.7rem] text-red-600 break-all font-medium flex items-center gap-1">Belum ada file
-                  dipilih</span>
-              </div>
-
-              <label id="drop-penalti"
-                class="shrink-0 flex items-center justify-center px-4 py-2 rounded-md cursor-pointer border border-dashed border-red-200 bg-red-50 hover:bg-red-100 transition-colors group">
-                <svg class="text-red-500 mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                  stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" x2="12" y1="3" y2="15" />
-                </svg>
-                <span class="text-sm font-semibold text-red-700 group-hover:text-red-800 transition-colors">Unggah
-                  File</span>
-                <input type="file" id="input-penalti" class="hidden" accept=".xlsx,.csv" />
-              </label>
-            </div>
-          </div>
-
-          <!-- Dashboard Analytics Section -->
-
-          <div id="analytics-dashboard"
-            class="dash is-collapsed border border-slate-200 mt-4 rounded-xl bg-white shadow-sm"
-            style="padding: 1.5rem !important">
-            <div class="flex justify-between items-center mb-2">
-              <div>
-                <h2 class="text-xl font-bold text-slate-800">
-                  Ringkasan Kinerja Satker
+              <div class="flex items-center gap-2 mb-1">
+                <h2 class="text-sm font-bold text-textMain flex items-center gap-2">
+                  File Data LPJ
                 </h2>
-                <div id="dash-bento-subtitle" class="text-sm text-slate-500 mb-2">
-                  Memuat data...
-                </div>
               </div>
-              <div class="flex gap-2 self-start mt-1">
-                <button onclick="downloadDashboardJPG()"
-                  class="bg-blue-50 text-blue-700 hover:bg-blue-100 font-medium text-sm px-3 py-1.5 rounded transition border border-blue-200 flex items-center gap-1.5 text-xs">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                  </svg>
-                  <span>Unduh JPG</span>
-                </button>
-                <button onclick="
+              <p class="text-[0.7rem] text-textMuted mb-2">
+                Upload laporan LPJ bulanan (.xlsx)
+              </p>
+              <span id="name-lpj" class="text-[0.7rem] text-primary break-all font-medium flex items-center gap-1">Belum
+                ada file
+                dipilih</span>
+            </div>
+
+            <label id="drop-lpj"
+              class="shrink-0 flex items-center justify-center px-4 py-2 rounded-md cursor-pointer border border-dashed border-border bg-bgHover hover:bg-bgLightBlue hover:border-secondary transition-colors group">
+              <svg class="text-slate-500 mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" x2="12" y1="3" y2="15" />
+              </svg>
+              <span class="text-sm font-semibold text-textMain group-hover:text-primary transition-colors">Unggah
+                File</span>
+              <input type="file" id="input-lpj" class="hidden" accept=".xlsx,.csv" />
+            </label>
+          </div>
+
+
+
+
+          <!-- Penalti File Upload -->
+          <div
+            class="bg-bgCard border border-border shadow-[0_1px_3px_rgba(0,0,0,0.05)] p-4 rounded-lg flex items-center justify-between gap-4 transition-all hover:shadow-md relative overflow-hidden">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <h2 class="text-sm font-bold text-red-700 flex items-center gap-2">
+                  File Data Penalti
+                </h2>
+                <span class="text-[0.65rem] bg-red-100 text-red-700 px-1.5 py-0.5 rounded-full font-medium">Semua
+                  Penalti (Opsional)</span>
+              </div>
+              <p class="text-[0.7rem] text-textMuted mb-2">
+                Upload file data Penalti (.xlsx/.csv)
+              </p>
+              <span id="name-penalti"
+                class="text-[0.7rem] text-red-600 break-all font-medium flex items-center gap-1">Belum ada file
+                dipilih</span>
+            </div>
+
+            <label id="drop-penalti"
+              class="shrink-0 flex items-center justify-center px-4 py-2 rounded-md cursor-pointer border border-dashed border-red-200 bg-red-50 hover:bg-red-100 transition-colors group">
+              <svg class="text-red-500 mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" x2="12" y1="3" y2="15" />
+              </svg>
+              <span class="text-sm font-semibold text-red-700 group-hover:text-red-800 transition-colors">Unggah
+                File</span>
+              <input type="file" id="input-penalti" class="hidden" accept=".xlsx,.csv" />
+            </label>
+          </div>
+        </div>
+
+        <!-- Dashboard Analytics Section -->
+
+        <div id="analytics-dashboard"
+          class="dash is-collapsed border border-slate-200 mt-4 rounded-xl bg-white shadow-sm"
+          style="padding: 1.5rem !important">
+          <div class="flex justify-between items-center mb-2">
+            <div>
+              <h2 class="text-xl font-bold text-slate-800">
+                Ringkasan Kinerja Satker
+              </h2>
+              <div id="dash-bento-subtitle" class="text-sm text-slate-500 mb-2">
+                Memuat data...
+              </div>
+            </div>
+            <div class="flex gap-2 self-start mt-1">
+              <button onclick="downloadDashboardJPG()"
+                class="bg-blue-50 text-blue-700 hover:bg-blue-100 font-medium text-sm px-3 py-1.5 rounded transition border border-blue-200 flex items-center gap-1.5 text-xs">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                <span>Unduh JPG</span>
+              </button>
+              <button onclick="
                       document
                         .getElementById('analytics-dashboard')
                         .classList.toggle('is-collapsed')
                     "
-                  class="bg-slate-50 text-slate-700 hover:bg-slate-100 font-medium text-sm px-3 py-1.5 rounded transition border border-slate-200 flex items-center gap-1.5 text-xs">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2">
-                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-                  </svg>
-                  <span>Expand Analisis</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="row grid grid-cols-1 md:grid-cols-3 gap-4" id="dash-bento-metrics">
-              <!-- Injected via JS -->
-            </div>
-
-            <div class="dash-expandable" style="margin-top: 1.25rem">
-              <div class="row grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="card shadow-none">
-                  <p class="card-title text-xs">Penolakan LPJ</p>
-                  <p class="card-sub text-[10px]">Statistik penolakan LPJ per bulan</p>
-                  <div style="position: relative; width: 100%; height: 180px">
-                    <canvas id="cTolak"></canvas>
-                  </div>
-                </div>
-                <div class="card shadow-none">
-                  <p class="card-title text-xs">Kepatuhan Pajak</p>
-                  <p class="card-sub text-[10px]">Statistik kepatuhan pajak per bulan</p>
-                  <div style="position: relative; width: 100%; height: 180px">
-                    <canvas id="cPajak"></canvas>
-                  </div>
-                </div>
-                <div class="card shadow-none">
-                  <p class="card-title text-xs">Kas Tunai</p>
-                  <p class="card-sub text-[10px]">Statistik saldo kas tunai per bulan</p>
-                  <div style="position: relative; width: 100%; height: 180px">
-                    <canvas id="cKasTunai"></canvas>
-                  </div>
-                </div>
-              </div>
-              <div class="row grid grid-cols-1 gap-4 mt-4">
-                <div class="card shadow-none">
-                  <p class="card-title text-xs">Tren Rata-rata Nilai</p>
-                  <p class="card-sub text-[10px]">Rata-rata kumulatif nilai seluruh satker per bulan</p>
-                  <div style="position: relative; width: 100%; height: 220px">
-                    <canvas id="cAvgScore"></canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Summary Sidebar (Bento Box) -->
-            <div
-              class="w-full bg-gradient-to-br from-primary to-secondary text-white rounded-lg p-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col md:flex-row gap-6 border-none">
-              <div class="flex flex-col flex-1">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-white/70 mb-3">
-                  Ringkasan Data (Auto)
-                </h3>
-                <p id="preview-subtitle" class="text-sm leading-relaxed mb-4 flex-1">
-                  Siap memproses data LPJ.
-                </p>
-
-                <div class="flex gap-4">
-                  <div class="bg-bgCard/10 p-3 rounded-lg flex flex-col min-w-[120px]">
-                    <span class="text-2xl font-bold" id="stat-total-rows">0</span>
-                    <span class="text-[0.65rem] uppercase opacity-80 font-semibold tracking-wider mt-1">Total
-                      Baris</span>
-                  </div>
-                  <div class="bg-bgCard/10 p-3 rounded-lg flex flex-col min-w-[120px]">
-                    <span class="text-2xl font-bold" id="stat-total-sheets">0</span>
-                    <span class="text-[0.65rem] uppercase opacity-80 font-semibold tracking-wider mt-1">Sheet
-                      Bulan</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex flex-col flex-1 border-t md:border-t-0 md:border-l border-white/20 pt-4 md:pt-0 md:pl-6">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-white/70 mb-3">
-                  Detail Group Sheet
-                </h3>
-                <ul id="summary-list"
-                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-2 text-sm max-h-[140px] overflow-y-auto custom-scrollbar-white pr-2 content-start">
-                  <!-- Injected dynamically -->
-                </ul>
-              </div>
-            </div>
-
-            <!-- Action / Process Button Row -->
-            <!-- Action / Process Button Row -->
-            <div
-              class="bg-bgCard border border-border shadow-[0_1px_3px_rgba(0,0,0,0.05)] p-5 rounded-lg flex flex-col xl:flex-row justify-between items-center gap-4">
-              <div class="text-sm text-textMuted flex-1">
-                <strong class="text-textMain">Kontrol Proses:</strong>
-                Konversi data, format, dan formula akan otomatis diinjeksi.
-                File target akan otomatis diperbarui dan dapat didownload
-                kapan saja.
-              </div>
-              <div class="flex flex-col sm:flex-row gap-3 w-full xl:w-auto shrink-0">
-                <button id="btn-reset"
-                  class="text-red-500 hover:text-red-700 bg-transparent hover:bg-red-50 border border-transparent hover:border-red-200 px-3 py-1.5 rounded-md font-medium text-xs transition-colors cursor-pointer w-full sm:w-auto flex items-center justify-center gap-1.5"
-                  title="Kosongkan seluruh nilai dan penalti, kembali ke template kosong">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 6h18" />
-                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                  </svg>
-                  Reset Data
-                </button>
-                <button id="btn-download-quick"
-                  class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer w-full sm:w-auto shadow-sm flex items-center justify-center gap-2"
-                  title="Download file target kapan saja tanpa perlu memproses data baru">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" x2="12" y1="15" y2="3" />
-                  </svg>
-                  DOWNLOAD FILE
-                </button>
-                <button id="btn-process"
-                  class="bg-primary hover:bg-primaryHover text-white px-8 py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer w-full sm:w-auto shadow-sm tracking-wide">
-                  PROSES DATA
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Preview Section -->
-      <div id="preview-section" class="hidden flex flex-col gap-4 w-full flex-1 min-h-0 p-4 md:p-6 pb-4">
-        <div class="flex flex-col gap-4 w-full flex-1 min-h-0">
-          <!-- Table Card (Bento Box) with TABS -->
-          <div
-            class="w-full h-full flex-1 bg-bgCard border border-border rounded-lg shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col overflow-hidden min-h-0">
-            <div class="bg-bg flex flex-col shrink-0">
-              <div
-                class="p-4 pb-2 border-b border-border flex justify-between items-center bg-bg shrink-0 gap-2 flex-wrap">
-                <div class="flex items-center gap-3">
-                  <h2 class="text-xs font-bold uppercase tracking-wider text-textMuted whitespace-nowrap">
-                    Pratinjau Data & Input Manual
-                  </h2>
-                </div>
-                <div class="flex items-center gap-2 flex-wrap">
-                  <div id="auto-filter-container"
-                    class="flex items-center gap-2 max-w-sm border border-border px-2.5 py-1.5 rounded-md bg-bgCard shadow-sm focus-within:ring-2 focus-within:ring-secondary/30 transition-all">
-                    <svg class="text-textMuted" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="11" cy="11" r="8"></circle>
-                      <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
-                    </svg>
-                    <input type="text" placeholder="Live filter AUTO..."
-                      class="border-none bg-transparent outline-none w-[120px] text-[0.8125rem] text-[#334155] placeholder:text-textMuted"
-                      onkeyup="applyAutoPreviewFilter(this.value)" />
-                  </div>
-                  <select id="sort-select-preview"
-                    class="text-xs border border-border rounded px-2 py-1.5 outline-none text-[#334155] shadow-sm bg-bgCard cursor-pointer"
-                    onchange="applyPreviewSort(this.value)">
-                    <option value="default">Urutkan (Standard)</option>
-                    <option value="satker_asc">Kode Satker (A-Z)</option>
-                    <option value="satker_desc">Kode Satker (Z-A)</option>
-                    <option value="tanggal_asc">Tanggal (Terdahulu)</option>
-                    <option value="tanggal_desc">Tanggal (Terbaru)</option>
-                    <option value="jam_asc">Jam (Terawal)</option>
-                  </select>
-                </div>
-              </div>
-              <div id="preview-tabs"
-                class="flex text-sm font-semibold overflow-x-auto w-full custom-scrollbar-white pt-2 px-2 bg-bgCard border-b border-border">
-                <!-- Tabs injected dynamically -->
-              </div>
-            </div>
-
-            <!-- AUTO View -->
-            <div id="view-auto" class="flex-1 flex flex-col min-h-0 bg-bgCard overflow-y-hidden">
-              <div class="px-6 pt-6 shrink-0">
-                <div
-                  class="bg-blue-50 border border-blue-200 p-4 rounded-lg flex justify-between items-start gap-4 mb-6">
-                  <div class="flex items-start gap-4">
-                    <div class="bg-blue-100 text-blue-600 p-2 rounded-full shrink-0">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 class="text-blue-800 font-semibold mb-1">
-                        Pratinjau Data Penilaian LPJ
-                      </h3>
-                      <p class="text-blue-700 text-sm">
-                        Berikut adalah pratinjau data penilaian berdasarkan rekap yang diunggah.
-                      </p>
-                    </div>
-                  </div>
-                  <button onclick="window.resetAutoTab()"
-                    class="text-sm font-semibold text-blue-700 bg-blue-100 px-3 py-1.5 rounded hover:bg-blue-200 transition-colors shrink-0">
-                    Reset Tabel
-                  </button>
-                </div>
-              </div>
-
-              <div class="table-container flex-1 overflow-auto bg-bgCard border-t border-border">
-                <table class="w-full text-left text-sm border-collapse">
-                  <thead class="bg-bgHeader sticky top-0 z-10 shadow-sm border-b border-border">
-                    <tr>
-                      <th scope="col"
-                        class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
-                        No
-                      </th>
-                      <th scope="col"
-                        class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
-                        Tanggal
-                      </th>
-                      <th scope="col"
-                        class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
-                        Jam
-                      </th>
-                      <th scope="col"
-                        class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
-                        Kode Satker
-                      </th>
-                      <th scope="col"
-                        class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
-                        Periode
-                      </th>
-                      <th scope="col"
-                        class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
-                        Tujuan
-                      </th>
-                      <th scope="col"
-                        class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border text-right">
-                        Aksi
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody id="preview-tbody" class="font-tabular-nums text-textMain divide-y divide-border">
-                    <!-- Injected dynamically -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <!-- MANUAL Sheets View -->
-            <div id="view-manual" class="hidden flex-1 flex flex-col min-h-0 bg-bgCard">
-              <div id="manual-table-container" class="table-container flex-1 bg-bgCard flex flex-col overflow-hidden">
-                <!-- Injected via XLSX.utils.sheet_to_html -->
-              </div>
-              <div id="manual-input-form"
-                class="border-t border-border p-3 bg-bg flex gap-3 overflow-x-auto items-end shrink-0 shadow-[0_-2px_4px_rgba(0,0,0,0.02)] relative z-20">
-                <!-- Dynamically generated inputs -->
-              </div>
-            </div>
-
-            <!-- PAJAK View -->
-            <div id="view-pajak" class="hidden flex-1 flex flex-col min-h-0 bg-bgCard overflow-y-auto">
-              <div class="p-6">
-                <div
-                  class="bg-rose-50 border border-rose-200 p-4 rounded-lg flex justify-between items-start gap-4 mb-6">
-                  <div class="flex items-start gap-4">
-                    <div class="bg-rose-100 text-rose-600 p-2 rounded-full shrink-0">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-                        <path d="M12 9v4" />
-                        <path d="M12 17h.01" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 class="text-rose-800 font-semibold mb-1">
-                        Peringatan Kepatuhan Pajak
-                      </h3>
-                      <p class="text-rose-700 text-sm">
-                        Berikut adalah daftar kepatuhan pajak berdasarkan data
-                        yang diunggah.
-                      </p>
-                    </div>
-                  </div>
-                  <button onclick="window.resetPajakTab()"
-                    class="text-sm font-semibold text-rose-700 bg-rose-100 px-3 py-1.5 rounded hover:bg-rose-200 transition-colors shrink-0">
-                    Reset Tabel
-                  </button>
-                </div>
-
-                <div class="border border-border rounded-xl overflow-x-auto bg-white shadow-sm">
-                  <div id="pajak-table-container">
-                    <div class="px-4 py-8 text-center text-textMuted text-sm">
-                      Data belum diproses. Silakan unggah file Data Penalti
-                      terlebih dahulu.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- TOLAK View -->
-            <div id="view-tolak" class="hidden flex-1 flex flex-col min-h-0 bg-bgCard overflow-y-auto">
-              <div class="p-6">
-                <div
-                  class="bg-orange-50 border border-orange-200 p-4 rounded-lg flex justify-between items-start gap-4 mb-6">
-                  <div class="flex items-start gap-4">
-                    <div class="bg-orange-100 text-orange-600 p-2 rounded-full shrink-0">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18.36 6.64a9 9 0 1 1-12.73 0" />
-                        <line x1="12" y1="2" x2="12" y2="12" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 class="text-orange-800 font-bold mb-1 flex items-center gap-2">
-                        Daftar Penolakan LPJ
-                      </h3>
-                      <p class="text-sm text-orange-700">
-                        Berikut adalah daftar penolakan LPJ berdasarkan data rekap
-                        yang diunggah.
-                      </p>
-                    </div>
-                  </div>
-                  <button onclick="window.resetTolakTab()"
-                    class="text-sm font-semibold text-orange-700 bg-orange-100 px-3 py-1.5 rounded hover:bg-orange-200 transition-colors shrink-0">
-                    Reset Tabel
-                  </button>
-                </div>
-
-                <div class="overflow-x-auto rounded-lg border border-border">
-                  <div id="tolak-table-container">
-                    <div class="px-4 py-8 text-center text-textMuted text-sm">
-                      Data belum diproses. Silakan unggah file Data Penalti terlebih
-                      dahulu.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- KAS TUNAI View -->
-            <div id="view-kas-tunai" class="hidden flex-1 flex flex-col min-h-0 bg-bgCard overflow-y-auto">
-              <div class="p-6">
-                <div
-                  class="bg-blue-50 border border-blue-200 p-4 rounded-lg flex justify-between items-start gap-4 mb-6">
-                  <div class="flex items-start gap-4">
-                    <div class="bg-blue-100 text-blue-600 p-2 rounded-full shrink-0">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="6" width="20" height="12" rx="2" />
-                        <circle cx="12" cy="12" r="2" />
-                        <path d="M6 12h.01M18 12h.01" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 class="text-blue-800 font-bold mb-1 flex items-center gap-2">
-                        Daftar Penalti Kas Tunai
-                      </h3>
-                      <p class="text-sm text-blue-700">
-                        Berikut adalah Satker dengan penalti nilai saldo Kas Tunai
-                        lebih dari 50 juta berdasarkan data yang diunggah.
-                      </p>
-                    </div>
-                  </div>
-                  <button onclick="window.resetKasTunaiTab()"
-                    class="text-sm font-semibold text-blue-700 bg-blue-100 px-3 py-1.5 rounded hover:bg-blue-200 transition-colors shrink-0">
-                    Reset Tabel
-                  </button>
-                </div>
-
-                <div class="overflow-x-auto rounded-lg border border-border">
-                  <div id="kas-tunai-table-container">
-                    <div class="px-4 py-8 text-center text-textMuted text-sm">
-                      Data belum diproses. Silakan unggah file Data Penalti terlebih
-                      dahulu.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <!-- Result Section -->
-      <div id="result-section"
-        class="hidden bg-bgCard rounded-lg flex flex-col gap-4 w-full flex-1 min-h-0 p-4 md:p-6 pb-4">
-        <!-- Modal Confirm -->
-        <div id="modal-confirm"
-          class="fixed inset-0 bg-black/50 z-[120] hidden items-center justify-center p-4 backdrop-blur-sm">
-          <div class="bg-white rounded-lg shadow-xl w-full max-w-sm flex flex-col overflow-hidden">
-            <div class="p-4 border-b border-gray-200">
-              <h2 id="modal-confirm-title" class="text-lg font-bold text-slate-800">
-                Konfirmasi
-              </h2>
-            </div>
-            <div class="p-4 flex-1">
-              <p id="modal-confirm-message" class="text-sm text-slate-600">
-                Apakah Anda yakin?
-              </p>
-            </div>
-            <div class="p-4 bg-gray-50 flex justify-end gap-2 border-t border-gray-200">
-              <button onclick="closeConfirmModal(false)"
-                class="px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-gray-300 rounded hover:bg-gray-50">
-                Batal
-              </button>
-              <button onclick="closeConfirmModal(true)"
-                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700">
-                Ya, Lanjutkan
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Modal Set BA Satker -->
-        <div id="modal-ba-satker"
-          class="fixed inset-0 bg-black/50 z-[110] hidden flex items-center justify-center p-4 backdrop-blur-sm">
-          <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[85vh] flex flex-col overflow-hidden">
-            <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50 flex-shrink-0">
-              <div>
-                <h2 id="modal-ba-title" class="text-lg font-bold text-slate-800">
-                  Daftar Satker
-                </h2>
-                <p id="modal-ba-subtitle" class="text-xs text-slate-500">
-                  Berdasarkan klasifikasi K/L
-                </p>
-              </div>
-              <button onclick="
-                    document
-                      .getElementById('modal-ba-satker')
-                      .classList.add('hidden')
-                  " class="text-slate-400 hover:text-rose-600 transition p-2 rounded-full hover:bg-rose-50">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                class="bg-slate-50 text-slate-700 hover:bg-slate-100 font-medium text-sm px-3 py-1.5 rounded transition border border-slate-200 flex items-center gap-1.5 text-xs">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2">
-                  <path d="M18 6 6 18M6 6l12 12" />
+                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
                 </svg>
+                <span>Expand Analisis</span>
               </button>
             </div>
-            <div class="p-4 overflow-y-auto flex-1">
-              <div class="overflow-x-auto border border-gray-200 rounded-lg">
-                <table class="w-full text-left text-sm text-slate-600 border-collapse">
-                  <thead class="bg-gray-50 border-b border-gray-200 uppercase text-xs text-slate-500">
-                    <tr>
-                      <th class="px-4 py-3 font-semibold w-24">Kode</th>
-                      <th class="px-4 py-3 font-semibold">Nama Satker</th>
-                      <th class="px-4 py-3 font-semibold text-right">
-                        Nilai Akhir
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody id="modal-ba-body" class="divide-y divide-gray-100">
-                    <!-- Injected via JS -->
-                  </tbody>
-                </table>
+          </div>
+
+          <div class="row grid grid-cols-1 md:grid-cols-3 gap-4" id="dash-bento-metrics">
+            <!-- Injected via JS -->
+          </div>
+
+          <div class="dash-expandable" style="margin-top: 1.25rem">
+            <div class="row grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="card shadow-none">
+                <p class="card-title text-xs">Penolakan LPJ</p>
+                <p class="card-sub text-[10px]">Statistik penolakan LPJ per bulan</p>
+                <div style="position: relative; width: 100%; height: 180px">
+                  <canvas id="cTolak"></canvas>
+                </div>
+              </div>
+              <div class="card shadow-none">
+                <p class="card-title text-xs">Kepatuhan Pajak</p>
+                <p class="card-sub text-[10px]">Statistik kepatuhan pajak per bulan</p>
+                <div style="position: relative; width: 100%; height: 180px">
+                  <canvas id="cPajak"></canvas>
+                </div>
+              </div>
+              <div class="card shadow-none">
+                <p class="card-title text-xs">Kas Tunai</p>
+                <p class="card-sub text-[10px]">Statistik saldo kas tunai per bulan</p>
+                <div style="position: relative; width: 100%; height: 180px">
+                  <canvas id="cKasTunai"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="row grid grid-cols-1 gap-4 mt-4">
+              <div class="card shadow-none">
+                <p class="card-title text-xs">Tren Rata-rata Nilai</p>
+                <p class="card-sub text-[10px]">Rata-rata kumulatif nilai seluruh satker per bulan</p>
+                <div style="position: relative; width: 100%; height: 220px">
+                  <canvas id="cAvgScore"></canvas>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+          <!-- Summary Sidebar (Bento Box) -->
+          <div
+            class="w-full bg-gradient-to-br from-primary to-secondary text-white rounded-lg p-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col md:flex-row gap-6 border-none">
+            <div class="flex flex-col flex-1">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-white/70 mb-3">
+                Ringkasan Data (Auto)
+              </h3>
+              <p id="preview-subtitle" class="text-sm leading-relaxed mb-4 flex-1">
+                Siap memproses data LPJ.
+              </p>
 
-        <!-- Expanded Chart Modal -->
-        <div id="modal-expanded-chart"
-          class="fixed inset-0 bg-black/50 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm">
-          <div class="bg-bgCard rounded-lg shadow-xl w-full max-w-6xl h-[85vh] flex flex-col overflow-hidden">
-            <div class="p-4 border-b border-border flex justify-between items-center bg-gray-50 shrink-0">
-              <h2 class="text-lg font-bold text-textMain">
-                Semua Nilai Satker (Peringkat Keseluruhan)
-              </h2>
-              <button id="btn-close-expanded"
-                class="text-textMuted hover:text-red-500 transition-colors p-1 rounded hover:bg-black/5">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              <div class="flex gap-4">
+                <div class="bg-bgCard/10 p-3 rounded-lg flex flex-col min-w-[120px]">
+                  <span class="text-2xl font-bold" id="stat-total-rows">0</span>
+                  <span class="text-[0.65rem] uppercase opacity-80 font-semibold tracking-wider mt-1">Total
+                    Baris</span>
+                </div>
+                <div class="bg-bgCard/10 p-3 rounded-lg flex flex-col min-w-[120px]">
+                  <span class="text-2xl font-bold" id="stat-total-sheets">0</span>
+                  <span class="text-[0.65rem] uppercase opacity-80 font-semibold tracking-wider mt-1">Sheet
+                    Bulan</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col flex-1 border-t md:border-t-0 md:border-l border-white/20 pt-4 md:pt-0 md:pl-6">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-white/70 mb-3">
+                Detail Group Sheet
+              </h3>
+              <ul id="summary-list"
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-2 text-sm max-h-[140px] overflow-y-auto custom-scrollbar-white pr-2 content-start">
+                <!-- Injected dynamically -->
+              </ul>
+            </div>
+          </div>
+
+          <!-- Action / Process Button Row -->
+          <!-- Action / Process Button Row -->
+          <div
+            class="bg-bgCard border border-border shadow-[0_1px_3px_rgba(0,0,0,0.05)] p-5 rounded-lg flex flex-col xl:flex-row justify-between items-center gap-4">
+            <div class="text-sm text-textMuted flex-1">
+              <strong class="text-textMain">Kontrol Proses:</strong>
+              Konversi data, format, dan formula akan otomatis diinjeksi.
+              File target akan otomatis diperbarui dan dapat didownload
+              kapan saja.
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3 w-full xl:w-auto shrink-0">
+              <button id="btn-reset"
+                class="text-red-500 hover:text-red-700 bg-transparent hover:bg-red-50 border border-transparent hover:border-red-200 px-3 py-1.5 rounded-md font-medium text-xs transition-colors cursor-pointer w-full sm:w-auto flex items-center justify-center gap-1.5"
+                title="Kosongkan seluruh nilai dan penalti, kembali ke template kosong">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M18 6L6 18M6 6l12 12" />
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
                 </svg>
+                Reset Data
               </button>
-            </div>
-            <div class="flex-grow p-4 min-h-0 w-full overflow-x-auto overflow-y-hidden">
-              <div class="h-full" style="min-width: max(100%, 1500px)">
-                <canvas id="chartAllSatker"></canvas>
-              </div>
+              <button id="btn-download-quick"
+                class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer w-full sm:w-auto shadow-sm flex items-center justify-center gap-2"
+                title="Download file target kapan saja tanpa perlu memproses data baru">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" x2="12" y1="15" y2="3" />
+                </svg>
+                DOWNLOAD FILE
+              </button>
+              <button id="btn-process"
+                class="bg-primary hover:bg-primaryHover text-white px-8 py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer w-full sm:w-auto shadow-sm tracking-wide">
+                PROSES DATA
+              </button>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
+    <!-- Preview Section -->
+    <div id="preview-section" class="hidden flex flex-col gap-4 w-full flex-1 min-h-0 p-4 md:p-6 pb-4">
+      <div class="flex flex-col gap-4 w-full flex-1 min-h-0">
+        <!-- Table Card (Bento Box) with TABS -->
         <div
-          class="border border-border rounded-lg shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col overflow-hidden mt-2 flex-1 min-h-0">
+          class="w-full h-full flex-1 bg-bgCard border border-border rounded-lg shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col overflow-hidden min-h-0">
           <div class="bg-bg flex flex-col shrink-0">
             <div
-              class="p-4 pb-2 border-b border-border bg-bg flex justify-between items-center shrink-0 gap-2 flex-wrap">
-              <h2 class="text-xs font-bold uppercase tracking-wider text-textMuted">
-                Hasil Data Yang Telah Disisipkan (Preview)
-              </h2>
+              class="p-4 pb-2 border-b border-border flex justify-between items-center bg-bg shrink-0 gap-2 flex-wrap">
+              <div class="flex items-center gap-3">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-textMuted whitespace-nowrap">
+                  Pratinjau Data & Input Manual
+                </h2>
+              </div>
               <div class="flex items-center gap-2 flex-wrap">
-                <div
+                <div id="auto-filter-container"
                   class="flex items-center gap-2 max-w-sm border border-border px-2.5 py-1.5 rounded-md bg-bgCard shadow-sm focus-within:ring-2 focus-within:ring-secondary/30 transition-all">
                   <svg class="text-textMuted" width="14" height="14" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1362,29 +998,55 @@
                     <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
                   </svg>
                   <input type="text" placeholder="Live filter AUTO..."
-                    class="border-none bg-transparent outline-none w-[160px] text-[0.8125rem] text-[#334155] placeholder:text-textMuted"
-                    onkeyup="applyAutoResultFilter(this.value)" />
+                    class="border-none bg-transparent outline-none w-[120px] text-[0.8125rem] text-[#334155] placeholder:text-textMuted"
+                    onkeyup="applyAutoPreviewFilter(this.value)" />
                 </div>
-                <select id="sort-select-result"
+                <select id="sort-select-preview"
                   class="text-xs border border-border rounded px-2 py-1.5 outline-none text-[#334155] shadow-sm bg-bgCard cursor-pointer"
-                  onchange="applyResultSort(this.value)">
+                  onchange="applyPreviewSort(this.value)">
                   <option value="default">Urutkan (Standard)</option>
                   <option value="satker_asc">Kode Satker (A-Z)</option>
                   <option value="satker_desc">Kode Satker (Z-A)</option>
-                  <option value="nilai_asc">Nilai (Terendah)</option>
-                  <option value="nilai_desc">Nilai (Tertinggi)</option>
+                  <option value="tanggal_asc">Tanggal (Terdahulu)</option>
+                  <option value="tanggal_desc">Tanggal (Terbaru)</option>
+                  <option value="jam_asc">Jam (Terawal)</option>
                 </select>
               </div>
             </div>
-            <div id="result-tabs"
+            <div id="preview-tabs"
               class="flex text-sm font-semibold overflow-x-auto w-full custom-scrollbar-white pt-2 px-2 bg-bgCard border-b border-border">
               <!-- Tabs injected dynamically -->
             </div>
           </div>
 
-          <!-- AUTO View Result -->
-          <div id="result-view-auto" class="flex-1 flex flex-col min-h-0 bg-bgCard">
-            <div class="table-container flex-1 overflow-auto bg-bgCard">
+          <!-- AUTO View -->
+          <div id="view-auto" class="flex-1 flex flex-col min-h-0 bg-bgCard overflow-y-hidden">
+            <div class="px-6 pt-6 shrink-0">
+              <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg flex justify-between items-start gap-4 mb-6">
+                <div class="flex items-start gap-4">
+                  <div class="bg-blue-100 text-blue-600 p-2 rounded-full shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-blue-800 font-semibold mb-1">
+                      Pratinjau Data Penilaian LPJ
+                    </h3>
+                    <p class="text-blue-700 text-sm">
+                      Berikut adalah pratinjau data penilaian berdasarkan rekap yang diunggah.
+                    </p>
+                  </div>
+                </div>
+                <button onclick="window.resetAutoTab()"
+                  class="text-sm font-semibold text-blue-700 bg-blue-100 px-3 py-1.5 rounded hover:bg-blue-200 transition-colors shrink-0">
+                  Reset Tabel
+                </button>
+              </div>
+            </div>
+
+            <div class="table-container flex-1 overflow-auto bg-bgCard border-t border-border">
               <table class="w-full text-left text-sm border-collapse">
                 <thead class="bg-bgHeader sticky top-0 z-10 shadow-sm border-b border-border">
                   <tr>
@@ -1402,378 +1064,731 @@
                     </th>
                     <th scope="col"
                       class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
-                      Satker
+                      Kode Satker
                     </th>
                     <th scope="col"
                       class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
-                      Nilai (Formula)
+                      Periode
                     </th>
                     <th scope="col"
                       class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
-                      Target Sheet
+                      Tujuan
+                    </th>
+                    <th scope="col"
+                      class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border text-right">
+                      Aksi
                     </th>
                   </tr>
                 </thead>
-                <tbody id="result-tbody" class="font-tabular-nums text-textMain divide-y divide-border">
+                <tbody id="preview-tbody" class="font-tabular-nums text-textMain divide-y divide-border">
                   <!-- Injected dynamically -->
                 </tbody>
               </table>
             </div>
           </div>
 
-          <!-- MANUAL Sheets View Result -->
-          <div id="result-view-manual" class="hidden flex-1 flex flex-col min-h-0 bg-bgCard">
-            <div id="result-manual-table-container" class="table-container flex-1 flex flex-col min-h-0 bg-bgCard">
+          <!-- MANUAL Sheets View -->
+          <div id="view-manual" class="hidden flex-1 flex flex-col min-h-0 bg-bgCard">
+            <div id="manual-table-container" class="table-container flex-1 bg-bgCard flex flex-col overflow-hidden">
               <!-- Injected via XLSX.utils.sheet_to_html -->
             </div>
+            <div id="manual-input-form"
+              class="border-t border-border p-3 bg-bg flex gap-3 overflow-x-auto items-end shrink-0 shadow-[0_-2px_4px_rgba(0,0,0,0.02)] relative z-20">
+              <!-- Dynamically generated inputs -->
+            </div>
           </div>
-        </div>
 
-        <div
-          class="flex justify-end mt-2 p-5 border border-border shadow-[0_1px_3px_rgba(0,0,0,0.05)] rounded-lg bg-bgCard items-center gap-4">
-          <div class="text-sm text-textMuted flex-1 hidden sm:block">
-            Silakan tinjau data di atas. Data ini akan dimasukkan ke format
-            Excel setelah Anda mengunduh.
+          <!-- PAJAK View -->
+          <div id="view-pajak" class="hidden flex-1 flex flex-col min-h-0 bg-bgCard overflow-y-auto">
+            <div class="p-6">
+              <div class="bg-rose-50 border border-rose-200 p-4 rounded-lg flex justify-between items-start gap-4 mb-6">
+                <div class="flex items-start gap-4">
+                  <div class="bg-rose-100 text-rose-600 p-2 rounded-full shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                      <path d="M12 9v4" />
+                      <path d="M12 17h.01" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-rose-800 font-semibold mb-1">
+                      Peringatan Kepatuhan Pajak
+                    </h3>
+                    <p class="text-rose-700 text-sm">
+                      Berikut adalah daftar kepatuhan pajak berdasarkan data
+                      yang diunggah.
+                    </p>
+                  </div>
+                </div>
+                <button onclick="window.resetPajakTab()"
+                  class="text-sm font-semibold text-rose-700 bg-rose-100 px-3 py-1.5 rounded hover:bg-rose-200 transition-colors shrink-0">
+                  Reset Tabel
+                </button>
+              </div>
+
+              <div class="border border-border rounded-xl overflow-x-auto bg-white shadow-sm mb-6">
+                <div id="pajak-table-container">
+                  <div class="px-4 py-8 text-center text-textMuted text-sm">
+                    Data belum diproses. Silakan unggah file Data Penalti
+                    terlebih dahulu.
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white border border-border rounded-xl p-4 shadow-sm mt-4">
+                <h4 class="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="text-amber-500">
+                    <path d="M3 3v18h18" />
+                    <path d="m19 9-5 5-4-4-3 3" />
+                  </svg>
+                  Riwayat Kepatuhan Pajak
+                </h4>
+                <div class="h-64 w-full relative">
+                  <canvas id="cPajakTab"></canvas>
+                </div>
+              </div>
+            </div>
           </div>
-          <button id="btn-reset-penilaian"
-            class="text-red-500 hover:text-red-700 bg-transparent hover:bg-red-50 border border-transparent hover:border-red-200 px-5 py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer flex items-center justify-center gap-2"
-            title="Kosongkan seluruh nilai dan penalti, kembali ke template kosong">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 6h18"></path>
-              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-            </svg>
-            Reset Data
-          </button>
-          <button id="btn-download"
-            class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold text-sm transition-colors shadow-sm flex items-center gap-2 w-full sm:w-auto shrink-0 justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" x2="12" y1="15" y2="3" />
-            </svg>
-            Download Nilai_Satker_UPDATED.xlsx
-          </button>
+          <!-- TOLAK View -->
+          <div id="view-tolak" class="hidden flex-1 flex flex-col min-h-0 bg-bgCard overflow-y-auto">
+            <div class="p-6">
+              <div
+                class="bg-orange-50 border border-orange-200 p-4 rounded-lg flex justify-between items-start gap-4 mb-6">
+                <div class="flex items-start gap-4">
+                  <div class="bg-orange-100 text-orange-600 p-2 rounded-full shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18.36 6.64a9 9 0 1 1-12.73 0" />
+                      <line x1="12" y1="2" x2="12" y2="12" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-orange-800 font-bold mb-1 flex items-center gap-2">
+                      Daftar Penolakan LPJ
+                    </h3>
+                    <p class="text-sm text-orange-700">
+                      Berikut adalah daftar penolakan LPJ berdasarkan data rekap
+                      yang diunggah.
+                    </p>
+                  </div>
+                </div>
+                <button onclick="window.resetTolakTab()"
+                  class="text-sm font-semibold text-orange-700 bg-orange-100 px-3 py-1.5 rounded hover:bg-orange-200 transition-colors shrink-0">
+                  Reset Tabel
+                </button>
+              </div>
+
+              <div class="overflow-x-auto rounded-lg border border-border mb-6">
+                <div id="tolak-table-container">
+                  <div class="px-4 py-8 text-center text-textMuted text-sm">
+                    Data belum diproses. Silakan unggah file Data Penalti terlebih
+                    dahulu.
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white border border-border rounded-xl p-4 shadow-sm mt-4">
+                <h4 class="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="text-rose-500">
+                    <path d="M3 3v18h18" />
+                    <path d="m19 9-5 5-4-4-3 3" />
+                  </svg>
+                  Riwayat Penolakan LPJ
+                </h4>
+                <div class="h-64 w-full relative">
+                  <canvas id="cTolakTab"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- KAS TUNAI View -->
+          <div id="view-kas-tunai" class="hidden flex-1 flex flex-col min-h-0 bg-bgCard overflow-y-auto">
+            <div class="p-6">
+              <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg flex justify-between items-start gap-4 mb-6">
+                <div class="flex items-start gap-4">
+                  <div class="bg-blue-100 text-blue-600 p-2 rounded-full shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="6" width="20" height="12" rx="2" />
+                      <circle cx="12" cy="12" r="2" />
+                      <path d="M6 12h.01M18 12h.01" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-blue-800 font-bold mb-1 flex items-center gap-2">
+                      Daftar Penalti Kas Tunai
+                    </h3>
+                    <p class="text-sm text-blue-700">
+                      Berikut adalah Satker dengan penalti nilai saldo Kas Tunai
+                      lebih dari 50 juta berdasarkan data yang diunggah.
+                    </p>
+                  </div>
+                </div>
+                <button onclick="window.resetKasTunaiTab()"
+                  class="text-sm font-semibold text-blue-700 bg-blue-100 px-3 py-1.5 rounded hover:bg-blue-200 transition-colors shrink-0">
+                  Reset Tabel
+                </button>
+              </div>
+
+              <div class="overflow-x-auto rounded-lg border border-border mb-6">
+                <div id="kas-tunai-table-container">
+                  <div class="px-4 py-8 text-center text-textMuted text-sm">
+                    Data belum diproses. Silakan unggah file Data Penalti terlebih
+                    dahulu.
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white border border-border rounded-xl p-4 shadow-sm mt-4">
+                <h4 class="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="text-emerald-500">
+                    <path d="M3 3v18h18" />
+                    <path d="m19 9-5 5-4-4-3 3" />
+                  </svg>
+                  Riwayat Kas Tunai
+                </h4>
+                <div class="h-64 w-full relative">
+                  <canvas id="cKasTunaiTab"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
+    </div>
 
-      <!-- Loading Overlay -->
-      <div id="loading-overlay"
-        class="fixed inset-0 bg-bgCard/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center">
-        <svg class="animate-spin text-primary" xmlns="http://www.w3.org/2000/svg" width="48" height="48"
-          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
-          <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-        </svg>
-        <p class="mt-4 text-lg font-medium tracking-tight text-slate-800">
-          Memproses Data...
-        </p>
-      </div>
-      <!-- User Guide Modal -->
-      <div id="modal-user-guide"
-        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-        <div
-          class="bg-bgCard border border-border shadow-2xl rounded-xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
-          <div class="p-5 border-b border-border flex items-center justify-between bg-zinc-50 dark:bg-zinc-800/50">
-            <h2 class="text-lg font-bold text-textMain flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="text-primary">
-                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-              </svg>
-              Petunjuk Penggunaan Aplikasi
+    <!-- Result Section -->
+    <div id="result-section"
+      class="hidden bg-bgCard rounded-lg flex flex-col gap-4 w-full flex-1 min-h-0 p-4 md:p-6 pb-4">
+      <!-- Modal Confirm -->
+      <div id="modal-confirm"
+        class="fixed inset-0 bg-black/50 z-[120] hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-sm flex flex-col overflow-hidden">
+          <div class="p-4 border-b border-gray-200">
+            <h2 id="modal-confirm-title" class="text-lg font-bold text-slate-800">
+              Konfirmasi
             </h2>
-            <button id="btn-close-guide"
-              class="text-textMuted hover:text-textMain transition-colors hover:bg-black/5 dark:hover:bg-white/5 rounded-full p-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
+          </div>
+          <div class="p-4 flex-1">
+            <p id="modal-confirm-message" class="text-sm text-slate-600">
+              Apakah Anda yakin?
+            </p>
+          </div>
+          <div class="p-4 bg-gray-50 flex justify-end gap-2 border-t border-gray-200">
+            <button onclick="closeConfirmModal(false)"
+              class="px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-gray-300 rounded hover:bg-gray-50">
+              Batal
+            </button>
+            <button onclick="closeConfirmModal(true)"
+              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700">
+              Ya, Lanjutkan
             </button>
           </div>
-
-          <div class="p-6 overflow-y-auto flex flex-col gap-6" style="scroll-behavior: smooth">
-            <div class="flex gap-4 items-start">
-              <div
-                class="shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-bold flex items-center justify-center font-mono">
-                1
-              </div>
-              <div>
-                <h3 class="font-bold text-textMain mb-1">
-                  Unggah File LPJ & Penalti
-                </h3>
-                <p class="text-sm text-textMuted leading-relaxed">
-                  Unggah file unduhan dari sistem SAKTI untuk LPJ. Anda juga dapat mengunggah file Penalti (opsional)
-                  untuk menghitung distribusi penalti secara otomatis ke dalam data penilaian.
-                </p>
-              </div>
-            </div>
-
-            <div class="flex gap-4 items-start">
-              <div
-                class="shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-bold flex items-center justify-center font-mono">
-                2
-              </div>
-              <div>
-                <h3 class="font-bold text-textMain mb-1">
-                  Proses dan Verifikasi
-                </h3>
-                <p class="text-sm text-textMuted leading-relaxed mb-2">
-                  Klik tombol <strong>Proses Data</strong>. Sistem akan mendeteksi satker, rincian transaksi, dan
-                  mendistribusikan nilai sesuai aturan penilaian yang berlaku.
-                </p>
-              </div>
-            </div>
-
-            <div class="flex gap-4 items-start">
-              <div
-                class="shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-bold flex items-center justify-center font-mono">
-                3
-              </div>
-              <div>
-                <h3 class="font-bold text-textMain mb-1">
-                  Monitoring & Dashboard
-                </h3>
-                <p class="text-sm text-textMuted leading-relaxed">
-                  Gunakan <strong>Ringkasan Kinerja Satker</strong> untuk melihat tren penolakan, kepatuhan pajak, dan
-                  saldo kas secara visual. Dashboard ini dapat diunduh sebagai gambar untuk pelaporan.
-                </p>
-              </div>
-            </div>
-
-            <div class="flex gap-4 items-start">
-              <div
-                class="shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-bold flex items-center justify-center font-mono">
-                4
-              </div>
-              <div>
-                <h3 class="font-bold text-textMain mb-1">
-                  Unduh Rekap Akhir
-                </h3>
-                <p class="text-sm text-textMuted leading-relaxed">
-                  Setelah semua data terproses, unduh file CSV hasil akhir. File ini berisi rincian nilai yang sudah
-                  siap digunakan untuk pengisian portal penilaian atau distribusi ke satker.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="p-4 border-t border-border bg-bg flex justify-end">
-            <button onclick="document.getElementById('btn-close-guide').click()"
-              class="bg-primary hover:bg-primary/90 text-white font-medium text-sm rounded-lg px-5 py-2.5 transition-colors">
-              Paham, Lanjutkan
-            </button>
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <!-- Satker Dashboard Workspace -->
-    <main id="workspace-satker"
-      class="hidden flex-1 min-h-0 overflow-y-auto p-4 md:p-6 w-full max-w-[1200px] mx-auto flex flex-col gap-6">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <!-- Hero/Header -->
-        <div
-          class="md:col-span-3 bg-bgCard border border-border shadow-sm p-6 lg:p-8 rounded-2xl relative overflow-hidden flex flex-col justify-center min-h-[180px]">
-          <div class="absolute top-0 right-0 -mr-8 -mt-8 w-64 h-64 bg-blue-100 rounded-full opacity-40 blur-3xl"></div>
-          <div class="absolute bottom-0 right-10 -mb-10 w-40 h-40 bg-indigo-100 rounded-full opacity-30 blur-2xl"></div>
-          <div class="relative z-10">
-            <span
-              class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full tracking-wider uppercase mb-3 inline-block shadow-sm border border-blue-100">Ojo
-              Lali Evaluasi</span>
-            <h2 id="satker-name-display"
-              class="text-2xl lg:text-3xl font-bold text-slate-800 tracking-tight leading-snug mb-3 max-w-2xl">
-              Memuat Data...
-            </h2>
-            <div class="text-sm text-slate-500 font-medium flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="opacity-70 text-blue-500">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                <line x1="16" y1="2" x2="16" y2="6" />
-                <line x1="8" y1="2" x2="8" y2="6" />
-                <line x1="3" y1="10" x2="21" y2="10" />
-              </svg>
-              Periode Tahun Anggaran 2026
-            </div>
-          </div>
-        </div>
-
-        <!-- Total Score Panel -->
-        <div
-          class="md:col-span-1 bg-gradient-to-br from-blue-600 to-indigo-700 shadow-lg p-6 lg:p-8 rounded-2xl relative overflow-hidden flex flex-col items-center justify-center text-center text-white min-h-[180px] hover:shadow-indigo-500/30 transition-shadow">
-          <div
-            class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] opacity-20">
-          </div>
-          <div class="absolute top-0 right-0 -m-8 w-24 h-24 bg-white rounded-full opacity-10 blur-xl"></div>
-          <div class="text-[0.65rem] font-bold text-blue-100 mb-2 uppercase tracking-widest relative z-10 opacity-90">
-            Total Nilai LPJ
-          </div>
-          <div id="satker-total-nilai"
-            class="text-5xl lg:text-6xl font-black relative z-10 tracking-tighter drop-shadow-md mb-2">
-            -
-          </div>
-          <div id="satker-kategori-nilai" class="text-xs font-bold px-3 py-1 rounded-full relative z-10 hidden">
-            -
-          </div>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Trend Grafik Bar (CSS) -->
-        <div
-          class="md:col-span-2 lg:col-span-2 bg-bgCard border border-border shadow-sm rounded-2xl p-6 lg:p-8 flex flex-col min-h-[280px]">
-          <div class="flex flex-col sm:flex-row sm:items-start justify-between mb-8 gap-4">
+      <!-- Modal Set BA Satker -->
+      <div id="modal-ba-satker"
+        class="fixed inset-0 bg-black/50 z-[110] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[85vh] flex flex-col overflow-hidden">
+          <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50 flex-shrink-0">
             <div>
-              <h3 class="font-bold text-slate-800 flex items-center gap-2 text-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                  class="text-indigo-500">
-                  <path d="M3 3v18h18" />
-                  <path d="m19 9-5 5-4-4-3 3" />
-                </svg>
-                Tren Ketepatan Bulanan
-              </h3>
-              <p class="text-xs text-slate-500 mt-1 max-w-sm">
-                Akumulasi poin ketepatan LPJ tiap bulan berjalan. Arahkan
-                kursor ke grafik untuk melihat detail nilai.
+              <h2 id="modal-ba-title" class="text-lg font-bold text-slate-800">
+                Daftar Satker
+              </h2>
+              <p id="modal-ba-subtitle" class="text-xs text-slate-500">
+                Berdasarkan klasifikasi K/L
               </p>
             </div>
-            <div class="flex items-center gap-2">
-              <span
-                class="text-[0.65rem] font-bold text-indigo-700 bg-indigo-50 px-2 py-1 rounded-md border border-indigo-100 flex items-center gap-1.5 shrink-0 uppercase tracking-widest"><span
-                  class="w-2 h-2 rounded-full bg-indigo-500 block"></span>Nilai Perbulan</span>
-            </div>
+            <button onclick="
+                    document
+                      .getElementById('modal-ba-satker')
+                      .classList.add('hidden')
+                  " class="text-slate-400 hover:text-rose-600 transition p-2 rounded-full hover:bg-rose-50">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-
-          <div class="flex-1 flex items-end justify-between gap-1.5 sm:gap-3 h-full relative w-full pt-4"
-            id="satker-trend-chart">
-            <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-sm font-medium">
-              Memuat grafik...
+          <div class="p-4 overflow-y-auto flex-1">
+            <div class="overflow-x-auto border border-gray-200 rounded-lg">
+              <table class="w-full text-left text-sm text-slate-600 border-collapse">
+                <thead class="bg-gray-50 border-b border-gray-200 uppercase text-xs text-slate-500">
+                  <tr>
+                    <th class="px-4 py-3 font-semibold w-24">Kode</th>
+                    <th class="px-4 py-3 font-semibold">Nama Satker</th>
+                    <th class="px-4 py-3 font-semibold text-right">
+                      Nilai Akhir
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="modal-ba-body" class="divide-y divide-gray-100">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
             </div>
-          </div>
-        </div>
-
-        <!-- Potongan Poin Panel -->
-        <div class="md:col-span-2 lg:col-span-1 bg-bgCard border border-border shadow-sm rounded-2xl p-6 flex flex-col">
-          <h3 class="font-bold text-slate-800 flex items-center gap-2 mb-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-              class="text-rose-500">
-              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-              <line x1="12" x2="12" y1="9" y2="13" />
-              <line x1="12" x2="12.01" y1="17" y2="17" />
-            </svg>
-            Faktor Pengurang
-          </h3>
-          <p class="text-xs text-slate-500 mb-5">
-            Akumulasi penalti sepanjang waktu berjalan (1 insiden = -5 Poin).
-          </p>
-
-          <div class="flex flex-col gap-3 flex-1 mb-6">
-            <div
-              class="flex flex-col gap-1.5 p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors group">
-              <div class="flex items-center justify-between">
-                <span
-                  class="text-[0.8rem] font-semibold text-slate-600 group-hover:text-slate-800 transition-colors">Kas
-                  Tunai &gt; 50Jt</span>
-                <span id="satker-penalti-kas"
-                  class="font-bold text-slate-400 px-2 py-0.5 bg-white rounded-md border border-slate-200 text-xs">0</span>
-              </div>
-            </div>
-            <div
-              class="flex flex-col gap-1.5 p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors group">
-              <div class="flex items-center justify-between">
-                <span
-                  class="text-[0.8rem] font-semibold text-slate-600 group-hover:text-slate-800 transition-colors">Kepatuhan
-                  Pajak</span>
-                <span id="satker-penalti-pajak"
-                  class="font-bold text-slate-400 px-2 py-0.5 bg-white rounded-md border border-slate-200 text-xs">0</span>
-              </div>
-            </div>
-            <div
-              class="flex flex-col gap-1.5 p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors group">
-              <div class="flex items-center justify-between">
-                <span
-                  class="text-[0.8rem] font-semibold text-slate-600 group-hover:text-slate-800 transition-colors">Tolak
-                  LPJ</span>
-                <span id="satker-penalti-tolak"
-                  class="font-bold text-slate-400 px-2 py-0.5 bg-white rounded-md border border-slate-200 text-xs">0</span>
-              </div>
-            </div>
-            <div
-              class="flex flex-col gap-1.5 p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors group">
-              <div class="flex items-center justify-between">
-                <span
-                  class="text-[0.8rem] font-semibold text-slate-600 group-hover:text-slate-800 transition-colors">Tanpa
-                  BA</span>
-                <span id="satker-penalti-ba"
-                  class="font-bold text-slate-400 px-2 py-0.5 bg-white rounded-md border border-slate-200 text-xs">0</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
-            <span
-              class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest leading-tight w-24">Jumlah<br />Ketepatan
-              Awal</span>
-            <span id="satker-jumlah-ketepatan" class="font-black text-slate-700 text-2xl tracking-tight">0</span>
           </div>
         </div>
       </div>
 
-      <!-- Riwayat Rincian Penalti -->
-      <div id="section-rincian-penalti"
-        class="bg-bgCard border border-border shadow-sm rounded-2xl overflow-hidden mt-2">
-        <div class="px-6 py-5 border-b border-border bg-slate-50 flex items-center justify-between">
-          <h3 class="font-bold text-slate-800 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+      <!-- Expanded Chart Modal -->
+      <div id="modal-expanded-chart"
+        class="fixed inset-0 bg-black/50 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-bgCard rounded-lg shadow-xl w-full max-w-6xl h-[85vh] flex flex-col overflow-hidden">
+          <div class="p-4 border-b border-border flex justify-between items-center bg-gray-50 shrink-0">
+            <h2 class="text-lg font-bold text-textMain">
+              Semua Nilai Satker (Peringkat Keseluruhan)
+            </h2>
+            <button id="btn-close-expanded"
+              class="text-textMuted hover:text-red-500 transition-colors p-1 rounded hover:bg-black/5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="flex-grow p-4 min-h-0 w-full overflow-x-auto overflow-y-hidden">
+            <div class="h-full" style="min-width: max(100%, 1500px)">
+              <canvas id="chartAllSatker"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="border border-border rounded-lg shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col overflow-hidden mt-2 flex-1 min-h-0">
+        <div class="bg-bg flex flex-col shrink-0">
+          <div class="p-4 pb-2 border-b border-border bg-bg flex justify-between items-center shrink-0 gap-2 flex-wrap">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-textMuted">
+              Hasil Data Yang Telah Disisipkan (Preview)
+            </h2>
+            <div class="flex items-center gap-2 flex-wrap">
+              <div
+                class="flex items-center gap-2 max-w-sm border border-border px-2.5 py-1.5 rounded-md bg-bgCard shadow-sm focus-within:ring-2 focus-within:ring-secondary/30 transition-all">
+                <svg class="text-textMuted" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+                </svg>
+                <input type="text" placeholder="Live filter AUTO..."
+                  class="border-none bg-transparent outline-none w-[160px] text-[0.8125rem] text-[#334155] placeholder:text-textMuted"
+                  onkeyup="applyAutoResultFilter(this.value)" />
+              </div>
+              <select id="sort-select-result"
+                class="text-xs border border-border rounded px-2 py-1.5 outline-none text-[#334155] shadow-sm bg-bgCard cursor-pointer"
+                onchange="applyResultSort(this.value)">
+                <option value="default">Urutkan (Standard)</option>
+                <option value="satker_asc">Kode Satker (A-Z)</option>
+                <option value="satker_desc">Kode Satker (Z-A)</option>
+                <option value="nilai_asc">Nilai (Terendah)</option>
+                <option value="nilai_desc">Nilai (Tertinggi)</option>
+              </select>
+            </div>
+          </div>
+          <div id="result-tabs"
+            class="flex text-sm font-semibold overflow-x-auto w-full custom-scrollbar-white pt-2 px-2 bg-bgCard border-b border-border">
+            <!-- Tabs injected dynamically -->
+          </div>
+        </div>
+
+        <!-- AUTO View Result -->
+        <div id="result-view-auto" class="flex-1 flex flex-col min-h-0 bg-bgCard">
+          <div class="table-container flex-1 overflow-auto bg-bgCard">
+            <table class="w-full text-left text-sm border-collapse">
+              <thead class="bg-bgHeader sticky top-0 z-10 shadow-sm border-b border-border">
+                <tr>
+                  <th scope="col"
+                    class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
+                    No
+                  </th>
+                  <th scope="col"
+                    class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
+                    Tanggal
+                  </th>
+                  <th scope="col"
+                    class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
+                    Jam
+                  </th>
+                  <th scope="col"
+                    class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
+                    Satker
+                  </th>
+                  <th scope="col"
+                    class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
+                    Nilai (Formula)
+                  </th>
+                  <th scope="col"
+                    class="px-4 py-3 font-semibold text-textMuted text-xs uppercase tracking-wider border-b border-border">
+                    Target Sheet
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="result-tbody" class="font-tabular-nums text-textMain divide-y divide-border">
+                <!-- Injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MANUAL Sheets View Result -->
+        <div id="result-view-manual" class="hidden flex-1 flex flex-col min-h-0 bg-bgCard">
+          <div id="result-manual-table-container" class="table-container flex-1 flex flex-col min-h-0 bg-bgCard">
+            <!-- Injected via XLSX.utils.sheet_to_html -->
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex justify-end mt-2 p-5 border border-border shadow-[0_1px_3px_rgba(0,0,0,0.05)] rounded-lg bg-bgCard items-center gap-4">
+        <div class="text-sm text-textMuted flex-1 hidden sm:block">
+          Silakan tinjau data di atas. Data ini akan dimasukkan ke format
+          Excel setelah Anda mengunduh.
+        </div>
+        <button id="btn-reset-penilaian"
+          class="text-red-500 hover:text-red-700 bg-transparent hover:bg-red-50 border border-transparent hover:border-red-200 px-5 py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer flex items-center justify-center gap-2"
+          title="Kosongkan seluruh nilai dan penalti, kembali ke template kosong">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+          </svg>
+          Reset Data
+        </button>
+        <button id="btn-download"
+          class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold text-sm transition-colors shadow-sm flex items-center gap-2 w-full sm:w-auto shrink-0 justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" x2="12" y1="15" y2="3" />
+          </svg>
+          Download Nilai_Satker_UPDATED.xlsx
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay"
+      class="fixed inset-0 bg-bgCard/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center">
+      <svg class="animate-spin text-primary" xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+      </svg>
+      <p class="mt-4 text-lg font-medium tracking-tight text-slate-800">
+        Memproses Data...
+      </p>
+    </div>
+    <!-- User Guide Modal -->
+    <div id="modal-user-guide"
+      class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+      <div
+        class="bg-bgCard border border-border shadow-2xl rounded-xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+        <div class="p-5 border-b border-border flex items-center justify-between bg-zinc-50 dark:bg-zinc-800/50">
+          <h2 class="text-lg font-bold text-textMain flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-              class="text-rose-600">
-              <circle cx="12" cy="12" r="10" />
-              <path d="m15 9-6 6" />
-              <path d="m9 9 6 6" />
+              class="text-primary">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
             </svg>
-            Riwayat Rincian Potongan/Penalti
-          </h3>
+            Petunjuk Penggunaan Aplikasi
+          </h2>
+          <button id="btn-close-guide"
+            class="text-textMuted hover:text-textMain transition-colors hover:bg-black/5 dark:hover:bg-white/5 rounded-full p-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="p-6 overflow-y-auto flex flex-col gap-6" style="scroll-behavior: smooth">
+          <div class="flex gap-4 items-start">
+            <div
+              class="shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-bold flex items-center justify-center font-mono">
+              1
+            </div>
+            <div>
+              <h3 class="font-bold text-textMain mb-1">
+                Unggah File LPJ & Penalti
+              </h3>
+              <p class="text-sm text-textMuted leading-relaxed">
+                Unggah file unduhan dari sistem SAKTI untuk LPJ. Anda juga dapat mengunggah file Penalti (opsional)
+                untuk menghitung distribusi penalti secara otomatis ke dalam data penilaian.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-4 items-start">
+            <div
+              class="shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-bold flex items-center justify-center font-mono">
+              2
+            </div>
+            <div>
+              <h3 class="font-bold text-textMain mb-1">
+                Proses dan Verifikasi
+              </h3>
+              <p class="text-sm text-textMuted leading-relaxed mb-2">
+                Klik tombol <strong>Proses Data</strong>. Sistem akan mendeteksi satker, rincian transaksi, dan
+                mendistribusikan nilai sesuai aturan penilaian yang berlaku.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-4 items-start">
+            <div
+              class="shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-bold flex items-center justify-center font-mono">
+              3
+            </div>
+            <div>
+              <h3 class="font-bold text-textMain mb-1">
+                Monitoring & Dashboard
+              </h3>
+              <p class="text-sm text-textMuted leading-relaxed">
+                Gunakan <strong>Ringkasan Kinerja Satker</strong> untuk melihat tren penolakan, kepatuhan pajak, dan
+                saldo kas secara visual. Dashboard ini dapat diunduh sebagai gambar untuk pelaporan.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-4 items-start">
+            <div
+              class="shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-bold flex items-center justify-center font-mono">
+              4
+            </div>
+            <div>
+              <h3 class="font-bold text-textMain mb-1">
+                Unduh Rekap Akhir
+              </h3>
+              <p class="text-sm text-textMuted leading-relaxed">
+                Setelah semua data terproses, unduh file CSV hasil akhir. File ini berisi rincian nilai yang sudah
+                siap digunakan untuk pengisian portal penilaian atau distribusi ke satker.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="p-4 border-t border-border bg-bg flex justify-end">
+          <button onclick="document.getElementById('btn-close-guide').click()"
+            class="bg-primary hover:bg-primary/90 text-white font-medium text-sm rounded-lg px-5 py-2.5 transition-colors">
+            Paham, Lanjutkan
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Satker Dashboard Workspace -->
+  <main id="workspace-satker"
+    class="hidden flex-1 min-h-0 overflow-y-auto p-4 md:p-6 w-full max-w-[1200px] mx-auto flex flex-col gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <!-- Hero/Header -->
+      <div
+        class="md:col-span-3 bg-bgCard border border-border shadow-sm p-6 lg:p-8 rounded-2xl relative overflow-hidden flex flex-col justify-center min-h-[180px]">
+        <div class="absolute top-0 right-0 -mr-8 -mt-8 w-64 h-64 bg-blue-100 rounded-full opacity-40 blur-3xl"></div>
+        <div class="absolute bottom-0 right-10 -mb-10 w-40 h-40 bg-indigo-100 rounded-full opacity-30 blur-2xl"></div>
+        <div class="relative z-10">
           <span
-            class="text-xs font-semibold text-slate-500 bg-white border border-slate-200 px-3 py-1 rounded-full shadow-sm"
-            id="satker-rincian-count">0 Temuan</span>
-        </div>
-        <div class="overflow-x-auto max-h-[400px] overflow-y-auto">
-          <table class="w-full text-left text-sm relative border-collapse">
-            <thead
-              class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-100 sticky top-0 shadow-sm z-10 box-border">
-              <tr>
-                <th class="px-6 py-3 whitespace-nowrap">Bulan</th>
-                <th class="px-6 py-3 whitespace-nowrap">Jenis Pelanggaran</th>
-                <th class="px-6 py-3 w-1/2">Keterangan / Dokumen</th>
-                <th class="px-6 py-3 text-right whitespace-nowrap">
-                  Insiden Poin
-                </th>
-              </tr>
-            </thead>
-            <tbody id="satker-rincian-tbody" class="divide-y divide-slate-100 text-slate-700 bg-white">
-              <tr>
-                <td colspan="4" class="px-6 py-12 text-center text-slate-400 font-medium italic">
-                  Data riwayat rinci belum tersedia untuk saat ini.
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full tracking-wider uppercase mb-3 inline-block shadow-sm border border-blue-100">Ojo
+            Lali Evaluasi</span>
+          <h2 id="satker-name-display"
+            class="text-2xl lg:text-3xl font-bold text-slate-800 tracking-tight leading-snug mb-3 max-w-2xl">
+            Memuat Data...
+          </h2>
+          <div class="text-sm text-slate-500 font-medium flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="opacity-70 text-blue-500">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            Periode Tahun Anggaran 2026
+          </div>
         </div>
       </div>
 
-      <!-- Footer Satker -->
-      <div class="mt-8 py-6 border-t border-slate-200/60 text-center">
-        <p class="text-slate-400 text-xs font-medium">
-          &copy; 2026 KPPN Magelang. All rights reserved.
-        </p>
+      <!-- Total Score Panel -->
+      <div
+        class="md:col-span-1 bg-gradient-to-br from-blue-600 to-indigo-700 shadow-lg p-6 lg:p-8 rounded-2xl relative overflow-hidden flex flex-col items-center justify-center text-center text-white min-h-[180px] hover:shadow-indigo-500/30 transition-shadow">
+        <div
+          class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] opacity-20">
+        </div>
+        <div class="absolute top-0 right-0 -m-8 w-24 h-24 bg-white rounded-full opacity-10 blur-xl"></div>
+        <div class="text-[0.65rem] font-bold text-blue-100 mb-2 uppercase tracking-widest relative z-10 opacity-90">
+          Total Nilai LPJ
+        </div>
+        <div id="satker-total-nilai"
+          class="text-5xl lg:text-6xl font-black relative z-10 tracking-tighter drop-shadow-md mb-2">
+          -
+        </div>
+        <div id="satker-kategori-nilai" class="text-xs font-bold px-3 py-1 rounded-full relative z-10 hidden">
+          -
+        </div>
       </div>
-    </main>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Trend Grafik Bar (CSS) -->
+      <div
+        class="md:col-span-2 lg:col-span-2 bg-bgCard border border-border shadow-sm rounded-2xl p-6 lg:p-8 flex flex-col min-h-[280px]">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between mb-8 gap-4">
+          <div>
+            <h3 class="font-bold text-slate-800 flex items-center gap-2 text-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="text-indigo-500">
+                <path d="M3 3v18h18" />
+                <path d="m19 9-5 5-4-4-3 3" />
+              </svg>
+              Tren Ketepatan Bulanan
+            </h3>
+            <p class="text-xs text-slate-500 mt-1 max-w-sm">
+              Akumulasi poin ketepatan LPJ tiap bulan berjalan. Arahkan
+              kursor ke grafik untuk melihat detail nilai.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span
+              class="text-[0.65rem] font-bold text-indigo-700 bg-indigo-50 px-2 py-1 rounded-md border border-indigo-100 flex items-center gap-1.5 shrink-0 uppercase tracking-widest"><span
+                class="w-2 h-2 rounded-full bg-indigo-500 block"></span>Nilai Perbulan</span>
+          </div>
+        </div>
+
+        <div class="flex-1 flex items-end justify-between gap-1.5 sm:gap-3 h-full relative w-full pt-4"
+          id="satker-trend-chart">
+          <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-sm font-medium">
+            Memuat grafik...
+          </div>
+        </div>
+      </div>
+
+      <!-- Potongan Poin Panel -->
+      <div class="md:col-span-2 lg:col-span-1 bg-bgCard border border-border shadow-sm rounded-2xl p-6 flex flex-col">
+        <h3 class="font-bold text-slate-800 flex items-center gap-2 mb-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-rose-500">
+            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+            <line x1="12" x2="12" y1="9" y2="13" />
+            <line x1="12" x2="12.01" y1="17" y2="17" />
+          </svg>
+          Faktor Pengurang
+        </h3>
+        <p class="text-xs text-slate-500 mb-5">
+          Akumulasi penalti sepanjang waktu berjalan (1 insiden = -5 Poin).
+        </p>
+
+        <div class="flex flex-col gap-3 flex-1 mb-6">
+          <div
+            class="flex flex-col gap-1.5 p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors group">
+            <div class="flex items-center justify-between">
+              <span class="text-[0.8rem] font-semibold text-slate-600 group-hover:text-slate-800 transition-colors">Kas
+                Tunai &gt; 50Jt</span>
+              <span id="satker-penalti-kas"
+                class="font-bold text-slate-400 px-2 py-0.5 bg-white rounded-md border border-slate-200 text-xs">0</span>
+            </div>
+          </div>
+          <div
+            class="flex flex-col gap-1.5 p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors group">
+            <div class="flex items-center justify-between">
+              <span
+                class="text-[0.8rem] font-semibold text-slate-600 group-hover:text-slate-800 transition-colors">Kepatuhan
+                Pajak</span>
+              <span id="satker-penalti-pajak"
+                class="font-bold text-slate-400 px-2 py-0.5 bg-white rounded-md border border-slate-200 text-xs">0</span>
+            </div>
+          </div>
+          <div
+            class="flex flex-col gap-1.5 p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors group">
+            <div class="flex items-center justify-between">
+              <span
+                class="text-[0.8rem] font-semibold text-slate-600 group-hover:text-slate-800 transition-colors">Tolak
+                LPJ</span>
+              <span id="satker-penalti-tolak"
+                class="font-bold text-slate-400 px-2 py-0.5 bg-white rounded-md border border-slate-200 text-xs">0</span>
+            </div>
+          </div>
+          <div
+            class="flex flex-col gap-1.5 p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors group">
+            <div class="flex items-center justify-between">
+              <span
+                class="text-[0.8rem] font-semibold text-slate-600 group-hover:text-slate-800 transition-colors">Tanpa
+                BA</span>
+              <span id="satker-penalti-ba"
+                class="font-bold text-slate-400 px-2 py-0.5 bg-white rounded-md border border-slate-200 text-xs">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
+          <span
+            class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest leading-tight w-24">Jumlah<br />Ketepatan
+            Awal</span>
+          <span id="satker-jumlah-ketepatan" class="font-black text-slate-700 text-2xl tracking-tight">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Riwayat Rincian Penalti -->
+    <div id="section-rincian-penalti" class="bg-bgCard border border-border shadow-sm rounded-2xl overflow-hidden mt-2">
+      <div class="px-6 py-5 border-b border-border bg-slate-50 flex items-center justify-between">
+        <h3 class="font-bold text-slate-800 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-rose-600">
+            <circle cx="12" cy="12" r="10" />
+            <path d="m15 9-6 6" />
+            <path d="m9 9 6 6" />
+          </svg>
+          Riwayat Rincian Potongan/Penalti
+        </h3>
+        <span
+          class="text-xs font-semibold text-slate-500 bg-white border border-slate-200 px-3 py-1 rounded-full shadow-sm"
+          id="satker-rincian-count">0 Temuan</span>
+      </div>
+      <div class="overflow-x-auto max-h-[400px] overflow-y-auto">
+        <table class="w-full text-left text-sm relative border-collapse">
+          <thead
+            class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-100 sticky top-0 shadow-sm z-10 box-border">
+            <tr>
+              <th class="px-6 py-3 whitespace-nowrap">Bulan</th>
+              <th class="px-6 py-3 whitespace-nowrap">Jenis Pelanggaran</th>
+              <th class="px-6 py-3 w-1/2">Keterangan / Dokumen</th>
+              <th class="px-6 py-3 text-right whitespace-nowrap">
+                Insiden Poin
+              </th>
+            </tr>
+          </thead>
+          <tbody id="satker-rincian-tbody" class="divide-y divide-slate-100 text-slate-700 bg-white">
+            <tr>
+              <td colspan="4" class="px-6 py-12 text-center text-slate-400 font-medium italic">
+                Data riwayat rinci belum tersedia untuk saat ini.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer Satker -->
+    <div class="mt-8 py-6 border-t border-slate-200/60 text-center">
+      <p class="text-slate-400 text-xs font-medium">
+        &copy; 2026 KPPN Magelang. All rights reserved.
+      </p>
+    </div>
+  </main>
   </div>
   <!-- Logic Script -->
   <script>
@@ -1782,6 +1797,7 @@
     let targetWorkbook = null;
     let targetFileName = "Nilai_Satker_UPDATED.xlsx";
     let parsedData = []; // Array of processed rows
+
     let finalOutputFile = null;
     let manualSheetNames = [];
     let activeTab = "AUTO";
@@ -2362,9 +2378,8 @@
                 "Workbook too large for Firebase sync. Saving locally.",
               );
             }
-            await localforage.setItem("targetWorkbookBase64", outBuffer);
-            await localforage.setItem(
-              "targetWorkbookName",
+            await localforage.setItem(("main_workbook") + "_targetWorkbookBase64", outBuffer);
+            await localforage.setItem(("main_workbook") + "_targetWorkbookName",
               targetFileName || "Template_Target_Otomatis.xlsx",
             );
           } else {
@@ -2379,6 +2394,9 @@
                   workbookBase64: outBuffer,
                   fileName: targetFileName || "Template_Target_Otomatis.xlsx",
                   updatedAt: new Date().toISOString(),
+                  tolakViolations: window.tolakViolations || [],
+                  pajakViolations: window.pajakViolations || [],
+                  kasTunaiViolations: window.kasTunaiViolations || [],
                 },
               );
             } catch (firebaseErr) {
@@ -2396,20 +2414,21 @@
                   firebaseErr,
                 );
               }
-              await localforage.setItem("targetWorkbookBase64", outBuffer);
-              await localforage.setItem(
-                "targetWorkbookName",
+              await localforage.setItem(("main_workbook") + "_targetWorkbookBase64", outBuffer);
+              await localforage.setItem(("main_workbook") + "_targetWorkbookName",
                 targetFileName || "Template_Target_Otomatis.xlsx",
               );
             }
           }
         } else {
-          await localforage.setItem("targetWorkbookBase64", outBuffer);
-          await localforage.setItem(
-            "targetWorkbookName",
+          await localforage.setItem(("main_workbook") + "_targetWorkbookBase64", outBuffer);
+          await localforage.setItem(("main_workbook") + "_targetWorkbookName",
             targetFileName || "Template_Target_Otomatis.xlsx",
           );
         }
+        await localforage.setItem(("main_workbook") + "_tolakViolations", window.tolakViolations || []);
+        await localforage.setItem(("main_workbook") + "_pajakViolations", window.pajakViolations || []);
+        await localforage.setItem(("main_workbook") + "_kasTunaiViolations", window.kasTunaiViolations || []);
       } catch (e) {
         console.error("Gagal menyimpan workbook:", e);
       }
@@ -2421,8 +2440,7 @@
         if (targetWorkbook) {
           wb = targetWorkbook;
         } else {
-          let targetWorkbookBase64Local = await localforage.getItem(
-            "targetWorkbookBase64",
+          let targetWorkbookBase64Local = await localforage.getItem(("main_workbook") + "_targetWorkbookBase64",
           );
           if (window.FirebaseApp && window.FirebaseApp.db) {
             try {
@@ -2946,9 +2964,17 @@
                   targetFileName =
                     data.fileName || "Template_Target_Otomatis.xlsx";
 
+                  // Restore violations from main_workbook (don't overwrite local with empty unless local is also empty)
+                  if (data.tolakViolations && (data.tolakViolations.length > 0 || !window.tolakViolations || window.tolakViolations.length === 0)) window.tolakViolations = data.tolakViolations;
+                  if (data.pajakViolations && (data.pajakViolations.length > 0 || !window.pajakViolations || window.pajakViolations.length === 0)) window.pajakViolations = data.pajakViolations;
+                  if (data.kasTunaiViolations && (data.kasTunaiViolations.length > 0 || !window.kasTunaiViolations || window.kasTunaiViolations.length === 0)) window.kasTunaiViolations = data.kasTunaiViolations;
+
                   // Cache to localforage so next page load (even offline/slow) is instant
-                  localforage.setItem("targetWorkbookBase64", data.workbookBase64);
-                  localforage.setItem("targetWorkbookName", targetFileName);
+                  localforage.setItem(("main_workbook") + "_targetWorkbookBase64", data.workbookBase64);
+                  localforage.setItem(("main_workbook") + "_targetWorkbookName", targetFileName);
+                  localforage.setItem(("main_workbook") + "_tolakViolations", window.tolakViolations || []);
+                  localforage.setItem(("main_workbook") + "_pajakViolations", window.pajakViolations || []);
+                  localforage.setItem(("main_workbook") + "_kasTunaiViolations", window.kasTunaiViolations || []);
 
                   // Re-render UI
                   if (typeof updateFormulaCaches === "function")
@@ -3050,9 +3076,9 @@
           if (workspaceSatker) workspaceSatker.classList.remove("hidden");
           if (sidebarKppn) sidebarKppn.classList.add("hidden");
           if (sidebarSatker) sidebarSatker.classList.remove("hidden");
-          if (appSidebar) appSidebar.classList.add("hidden");
-          if (toggleBtn) toggleBtn.classList.add("hidden");
-          if (headerAuthContainer) headerAuthContainer.classList.remove("hidden");
+          if (appSidebar) appSidebar.classList.remove("hidden");
+          if (toggleBtn) toggleBtn.classList.remove("hidden");
+          if (headerAuthContainer) headerAuthContainer.classList.add("hidden");
 
           updateAuthUI(`<span>Logout (${satkerCode})</span>`, () => {
             localStorage.removeItem("satkerLoginCode");
@@ -3161,8 +3187,7 @@
           btnLoginSatker.innerHTML = "Memeriksa...";
 
           try {
-            let targetWorkbookBase64Local = await localforage.getItem(
-              "targetWorkbookBase64",
+            let targetWorkbookBase64Local = await localforage.getItem(("main_workbook") + "_targetWorkbookBase64",
             );
             let remoteFound = false;
 
@@ -3268,8 +3293,8 @@
       }
 
       try {
-        const savedBase64 = await localforage.getItem("targetWorkbookBase64");
-        const savedFileName = await localforage.getItem("targetWorkbookName");
+        const savedBase64 = await localforage.getItem(("main_workbook") + "_targetWorkbookBase64");
+        const savedFileName = await localforage.getItem(("main_workbook") + "_targetWorkbookName");
 
         if (savedBase64) {
           targetWorkbook = XLSX.read(savedBase64, {
@@ -3294,6 +3319,15 @@
             targetFileName = savedFileName || "Template.xlsx";
           }
         }
+
+        const savedTolak = await localforage.getItem(("main_workbook") + "_tolakViolations");
+        const savedPajak = await localforage.getItem(("main_workbook") + "_pajakViolations");
+        const savedKasTunai = await localforage.getItem(("main_workbook") + "_kasTunaiViolations");
+
+        if (savedTolak) window.tolakViolations = savedTolak;
+        if (savedPajak) window.pajakViolations = savedPajak;
+        if (savedKasTunai) window.kasTunaiViolations = savedKasTunai;
+
       } catch (e) {
         console.error("Gagal memuat file sesi sebelumnya:", e);
       }
@@ -4063,6 +4097,19 @@
         if (kasTunaiData)
           window.rawKasTunaiData = parseRawPenalti(kasTunaiData);
 
+        // SAVE IMMEDIATELY to local storage and sync system to avoid data loss before targetWorkbook generation
+        localforage.setItem(("main_workbook") + "_tolakViolations", window.tolakViolations || []);
+        localforage.setItem(("main_workbook") + "_pajakViolations", window.pajakViolations || []);
+        localforage.setItem(("main_workbook") + "_kasTunaiViolations", window.kasTunaiViolations || []);
+
+        if (window.fbSync && window.fbSync.auth && window.fbSync.auth.currentUser) {
+          window.fbSync.saveState({
+            tolakViolations: window.tolakViolations,
+            pajakViolations: window.pajakViolations,
+            kasTunaiViolations: window.kasTunaiViolations,
+          });
+        }
+
         // Write to PENILAIAN immediately if present
         if (targetWorkbook && targetWorkbook.Sheets["PENILAIAN"]) {
           let penWs = targetWorkbook.Sheets["PENILAIAN"];
@@ -4113,6 +4160,20 @@
               if (code) penByCode[code] = R;
             }
 
+            // 1) Restore pristine cells if available, to prevent accumulation
+            if (!targetWorkbook.pristinePenilaianCells) {
+              targetWorkbook.pristinePenilaianCells = {};
+            } else {
+              for (let addr in targetWorkbook.pristinePenilaianCells) {
+                let pristineCell = targetWorkbook.pristinePenilaianCells[addr];
+                if (pristineCell === null) {
+                  delete penWs[addr];
+                } else {
+                  penWs[addr] = { ...pristineCell };
+                }
+              }
+            }
+
             let getV = (r, c) => {
               if (c === undefined) return 0;
               let addr = XLSX.utils.encode_cell({ r: r, c: c });
@@ -4148,12 +4209,19 @@
                 }
               });
 
+              let savePristine = (addrStr) => {
+                if (!(addrStr in targetWorkbook.pristinePenilaianCells)) {
+                  targetWorkbook.pristinePenilaianCells[addrStr] = penWs[addrStr] ? { ...penWs[addrStr] } : null;
+                }
+              };
+
               for (let code in penByCode) {
                 let r = penByCode[code];
 
                 // Update Aggregate Column
                 if (aggColIdx !== undefined) {
                   let addrStr = XLSX.utils.encode_cell({ r: r, c: aggColIdx });
+                  savePristine(addrStr);
                   let existing = penWs[addrStr] ? parseFloat(penWs[addrStr].v) || 0 : 0;
                   let cv = vmapAgg[code] || 0;
                   penWs[addrStr] = { t: "n", v: existing + cv };
@@ -4165,6 +4233,7 @@
                     let mColIdx = colMap[`month_${mKey}`];
                     if (mColIdx !== undefined) {
                       let addrStr = XLSX.utils.encode_cell({ r: r, c: mColIdx });
+                      savePristine(addrStr);
                       let existingM = penWs[addrStr] ? parseFloat(penWs[addrStr].v) || 0 : 0;
                       penWs[addrStr] = { t: "n", v: existingM + vmapMonth[code][mKey] };
                     }
@@ -4173,9 +4242,10 @@
               }
             };
 
-            processList(tolakList, colMap.tolak);
-            processList(pajakList, colMap.pajak);
-            processList(kasTunaiList, colMap.kasTunai);
+            // Process using GLOBAL state so that we always inject all known penalties!
+            processList(window.tolakViolations || [], colMap.tolak);
+            processList(window.pajakViolations || [], colMap.pajak);
+            processList(window.kasTunaiViolations || [], colMap.kasTunai);
 
             // Recalculate totals
             if (
@@ -7967,6 +8037,19 @@
           });
         }
 
+        const ctxTolakTab = document.getElementById("cTolakTab");
+        if (ctxTolakTab) {
+          if (window.tabChartTolak) window.tabChartTolak.destroy();
+          window.tabChartTolak = new Chart(ctxTolakTab, {
+            type: "bar",
+            data: {
+              labels: monthsOrder,
+              datasets: [{ data: tolakDataChart, backgroundColor: "#ef4444", borderRadius: 4 }]
+            },
+            options: commonOptions
+          });
+        }
+
         // Chart Pajak
         const ctxPajak = document.getElementById("cPajak");
         if (ctxPajak) {
@@ -7988,11 +8071,51 @@
           });
         }
 
+        const ctxPajakTab = document.getElementById("cPajakTab");
+        if (ctxPajakTab) {
+          if (window.tabChartPajak) window.tabChartPajak.destroy();
+          window.tabChartPajak = new Chart(ctxPajakTab, {
+            type: "line",
+            data: {
+              labels: monthsOrder,
+              datasets: [{
+                data: pajakDataChart,
+                borderColor: "#f59e0b",
+                backgroundColor: "rgba(245,158,11,0.1)",
+                fill: true,
+                tension: 0.4,
+                pointRadius: 3
+              }]
+            },
+            options: commonOptions
+          });
+        }
+
         // Chart Kas Tunai
         const ctxKasTunai = document.getElementById("cKasTunai");
         if (ctxKasTunai) {
           if (window.dashChartKasTunai) window.dashChartKasTunai.destroy();
           window.dashChartKasTunai = new Chart(ctxKasTunai, {
+            type: "line",
+            data: {
+              labels: monthsOrder,
+              datasets: [{
+                data: kasTunaiDataChart,
+                borderColor: "#10b981",
+                backgroundColor: "rgba(16,185,129,0.1)",
+                fill: true,
+                tension: 0.4,
+                pointRadius: 3
+              }]
+            },
+            options: commonOptions
+          });
+        }
+
+        const ctxKasTunaiTab = document.getElementById("cKasTunaiTab");
+        if (ctxKasTunaiTab) {
+          if (window.tabChartKasTunai) window.tabChartKasTunai.destroy();
+          window.tabChartKasTunai = new Chart(ctxKasTunaiTab, {
             type: "line",
             data: {
               labels: monthsOrder,
