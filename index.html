@@ -4088,7 +4088,14 @@
         }
         let kasTunaiList = kasTunaiData ? parseKasTunaiHorizontal(kasTunaiData) : [];
 
-        // Override globals
+        // Reset dulu sebelum assign data baru agar tidak accumulate/double
+        window.tolakViolations = [];
+        window.pajakViolations = [];
+        window.kasTunaiViolations = [];
+        // Reset pristine cells agar kolom PENILAIAN ditulis ulang dari 0, bukan dijumlah ke nilai lama
+        if (targetWorkbook) targetWorkbook.pristinePenilaianCells = {};
+
+        // Override globals dengan data dari file baru
         if (tolakList.length > 0) window.tolakViolations = tolakList;
         if (pajakList.length > 0)
           window.pajakViolations = pajakList.map((v) => ({
