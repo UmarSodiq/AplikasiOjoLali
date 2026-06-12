@@ -13,7 +13,7 @@
   <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -41,6 +41,7 @@
       getDoc,
       onSnapshot,
       signInWithPopup,
+      signInWithEmailAndPassword,
       provider,
       onAuthStateChanged,
       signOut
@@ -551,10 +552,10 @@
       <div id="form-login-kppn" class="hidden">
         <div class="flex flex-col gap-4 text-left mb-6">
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Username</label>
-            <input type="text" id="login-username"
+            <label class="block text-sm font-medium text-slate-700 mb-1">Email Admin KPPN</label>
+            <input type="email" id="login-username"
               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Masukkan username" />
+              placeholder="contoh: admin@kppnmagelang.id" />
           </div>
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
@@ -2370,7 +2371,7 @@
 
         if (
           window.FirebaseApp &&
-          localStorage.getItem("isLoggedIn") === "true"
+          window.FirebaseApp.auth.currentUser
         ) {
           if (outBuffer.length > 900000 || window.firebaseQuotaExhausted) {
             if (!window.firebaseQuotaExhausted) {
@@ -3041,7 +3042,7 @@
         const appSidebar = document.getElementById("app-sidebar");
         const toggleBtn = document.querySelector('button[title="Toggle Sidebar"]');
         const headerAuthContainer = document.getElementById("header-auth-container");
-        const isKppn = localStorage.getItem("isLoggedIn") === "true";
+        const isKppn = !!(window.FirebaseApp && window.FirebaseApp.auth.currentUser);
         const satkerCode = localStorage.getItem("satkerLoginCode");
 
         // Update helper for both buttons
@@ -3071,10 +3072,11 @@
           if (toggleBtn) toggleBtn.classList.remove("hidden");
           if (headerAuthContainer) headerAuthContainer.classList.add("hidden"); // Hide in KPPN view to avoid duplication
 
-          updateAuthUI(`<span>Logged in as verakppnmgl</span>`, () => {
-            localStorage.removeItem("isLoggedIn");
+          const kppnEmail = window.FirebaseApp.auth.currentUser?.email || "Admin KPPN";
+          updateAuthUI(`<span>Logout (${kppnEmail})</span>`, () => {
             if (unsubscribeSnapshot) unsubscribeSnapshot();
-            checkAuth();
+            window.FirebaseApp.signOut(window.FirebaseApp.auth);
+            // checkAuth() akan otomatis dipanggil ulang via onAuthStateChanged
           }, "Click to Sign Out", true);
         } else if (satkerCode) {
           if (loginOverlay) loginOverlay.classList.add("hidden");
@@ -3164,17 +3166,38 @@
       }
 
       if (btnLoginMain) {
-        btnLoginMain.onclick = () => {
-          if (
-            loginUsername.value === "verakppnmgl" &&
-            loginPassword.value === "kppn112"
-          ) {
-            localStorage.setItem("isLoggedIn", "true");
-            localStorage.removeItem("satkerLoginCode");
-            loginError.classList.add("hidden");
-            checkAuth();
-          } else {
+        btnLoginMain.onclick = async () => {
+          loginError.classList.add("hidden");
+          const email = loginUsername.value.trim();
+          const password = loginPassword.value;
+
+          if (!window.FirebaseApp) {
+            loginError.textContent = "Firebase belum siap, coba lagi sebentar.";
             loginError.classList.remove("hidden");
+            return;
+          }
+
+          btnLoginMain.disabled = true;
+          const originalLabel = btnLoginMain.innerHTML;
+          btnLoginMain.innerHTML = "Memproses...";
+
+          try {
+            await window.FirebaseApp.signInWithEmailAndPassword(
+              window.FirebaseApp.auth,
+              email,
+              password
+            );
+            localStorage.removeItem("satkerLoginCode");
+            loginError.textContent = "Username atau password salah.";
+            loginError.classList.add("hidden");
+            // checkAuth() akan otomatis dipanggil ulang via onAuthStateChanged
+          } catch (err) {
+            console.error("Login KPPN error:", err);
+            loginError.textContent = "Email atau password salah.";
+            loginError.classList.remove("hidden");
+          } finally {
+            btnLoginMain.disabled = false;
+            btnLoginMain.innerHTML = originalLabel;
           }
         };
       }
@@ -3274,7 +3297,9 @@
 
             // Login Success
             localStorage.setItem("satkerLoginCode", code);
-            localStorage.removeItem("isLoggedIn"); // clear KPPN
+            if (window.FirebaseApp && window.FirebaseApp.auth.currentUser) {
+              window.FirebaseApp.signOut(window.FirebaseApp.auth); // clear KPPN session
+            }
             loginSatkerError.classList.add("hidden");
             checkAuth();
           } catch (err) {
@@ -3290,11 +3315,17 @@
       if (window.FirebaseApp) {
         checkAuth();
         startSyncing();
+        window.FirebaseApp.onAuthStateChanged(window.FirebaseApp.auth, () => {
+          checkAuth();
+        });
       } else {
         window.addEventListener("FirebaseReady", () => {
           console.log("Firebase is ready, updating authentication status...");
           checkAuth();
           startSyncing();
+          window.FirebaseApp.onAuthStateChanged(window.FirebaseApp.auth, () => {
+            checkAuth();
+          });
         });
       }
 
