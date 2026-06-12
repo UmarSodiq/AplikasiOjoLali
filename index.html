@@ -2964,10 +2964,11 @@
                   targetFileName =
                     data.fileName || "Template_Target_Otomatis.xlsx";
 
-                  // Restore violations from main_workbook (don't overwrite local with empty unless local is also empty)
-                  if (data.tolakViolations && (data.tolakViolations.length > 0 || !window.tolakViolations || window.tolakViolations.length === 0)) window.tolakViolations = data.tolakViolations;
-                  if (data.pajakViolations && (data.pajakViolations.length > 0 || !window.pajakViolations || window.pajakViolations.length === 0)) window.pajakViolations = data.pajakViolations;
-                  if (data.kasTunaiViolations && (data.kasTunaiViolations.length > 0 || !window.kasTunaiViolations || window.kasTunaiViolations.length === 0)) window.kasTunaiViolations = data.kasTunaiViolations;
+                  // Restore violations from main_workbook - server selalu jadi sumber kebenaran,
+                  // termasuk array kosong (agar reset di KPPN ikut tersinkron ke Satker)
+                  if (data.tolakViolations !== undefined) window.tolakViolations = data.tolakViolations;
+                  if (data.pajakViolations !== undefined) window.pajakViolations = data.pajakViolations;
+                  if (data.kasTunaiViolations !== undefined) window.kasTunaiViolations = data.kasTunaiViolations;
 
                   // Re-render tab violations agar Perangkat B langsung tampil datanya
                   if (typeof window.renderTolakTab === 'function') window.renderTolakTab();
@@ -3825,6 +3826,211 @@
       }
     }
 
+    // Recalculate kolom PENILAIAN (Tolak, Pajak, Kas Tunai, Total) berdasarkan
+    // window.tolakViolations / pajakViolations / kasTunaiViolations saat ini.
+    // Selalu mulai dari pristineCells agar TIDAK accumulate (double) saat dipanggil berulang.
+    // Dipanggil baik saat upload penalti baru, maupun saat reset (violations = []).
+    function recalcPenilaianFromViolations() {
+      if (!targetWorkbook || !targetWorkbook.Sheets["PENILAIAN"]) return;
+
+      let penWs = targetWorkbook.Sheets["PENILAIAN"];
+      let pRange = XLSX.utils.decode_range(penWs["!ref"]);
+      let colMap = {};
+
+      for (let R = 0; R <= Math.min(10, pRange.e.r); R++) {
+        for (let C = 0; C <= pRange.e.c; C++) {
+          let cell = penWs[XLSX.utils.encode_cell({ r: R, c: C })];
+          if (!cell || !cell.v || typeof cell.v !== "string") continue;
+          let val = cell.v.toUpperCase().trim();
+
+          if ((val.includes("KODE SATKER") || val === "SATKER") && !colMap.satker)
+            colMap.satker = C;
+          if ((val === "TOLAK" || val.includes("TOLAK LPJ") || val.includes("PENOLAKAN")) && !colMap.tolak)
+            colMap.tolak = C;
+          if (val.includes("JUMLAH KETEPATAN") && !colMap.ketepatan)
+            colMap.ketepatan = C;
+          if ((val.includes("KAS TUNAI") || val.includes("KAS_TUNAI") || val.includes(">50") || val.includes("> 50")) && !colMap.kasTunai)
+            colMap.kasTunai = C;
+          if (val.includes("PAJAK") && !val.includes("TEPAT") && !colMap.pajak)
+            colMap.pajak = C;
+          if ((val.includes("TANPA BA") || val === "TANPA" || val.includes("TANPA_BA")) && !val.includes(">50") && !colMap.tanpaBa)
+            colMap.tanpaBa = C;
+          if (val.includes("TOTAL NILAI") && !colMap.total)
+            colMap.total = C;
+
+          const months = ["JAN", "FEB", "MAR", "APR", "MEI", "JUN", "JUL", "AGU", "SEP", "OKT", "NOV", "DES"];
+          months.forEach(m => {
+            if ((val === m || val.includes(`NILAI - ${m}`) || val.includes(`PENALTI ${m}`)) && !colMap[`month_${m}`]) {
+              colMap[`month_${m}`] = C;
+            }
+          });
+        }
+      }
+
+      if (colMap.satker === undefined) return;
+
+      let penByCode = {};
+      for (let R = 0; R <= pRange.e.r; R++) {
+        let cell = penWs[XLSX.utils.encode_cell({ r: R, c: colMap.satker })];
+        if (!cell || cell.v == null) continue;
+        let code = _normSatker(cell.v);
+        if (code) penByCode[code] = R;
+      }
+
+      // 1) Restore pristine cells dulu, agar baseline selalu bersih sebelum di-apply ulang
+      if (!targetWorkbook.pristinePenilaianCells) {
+        targetWorkbook.pristinePenilaianCells = {};
+      } else {
+        for (let addr in targetWorkbook.pristinePenilaianCells) {
+          let pristineCell = targetWorkbook.pristinePenilaianCells[addr];
+          if (pristineCell === null) {
+            delete penWs[addr];
+          } else {
+            penWs[addr] = { ...pristineCell };
+          }
+        }
+      }
+
+      let getV = (r, c) => {
+        if (c === undefined) return 0;
+        let addr = XLSX.utils.encode_cell({ r: r, c: c });
+        return penWs[addr] ? parseFloat(penWs[addr].v) || 0 : 0;
+      };
+
+      let processList = (list, aggColIdx) => {
+        if (!list || list.length === 0) return;
+
+        let vmapAgg = {};
+        let vmapMonth = {};
+
+        list.forEach((v) => {
+          const key = v.satker;
+          vmapAgg[key] = (vmapAgg[key] || 0) + v.jumlah;
+
+          if (!vmapMonth[key]) vmapMonth[key] = {};
+
+          if (v.monthData) {
+            for (let mKey in v.monthData) {
+              if (v.monthData[mKey].val > 0) {
+                vmapMonth[key][mKey] = (vmapMonth[key][mKey] || 0) + v.monthData[mKey].val;
+              }
+            }
+          } else {
+            const mMatch = String(v.periode || "").toUpperCase().trim().substring(0, 3);
+            const months = ["JAN", "FEB", "MAR", "APR", "MEI", "JUN", "JUL", "AGU", "SEP", "OKT", "NOV", "DES"];
+            const mKey = months.includes(mMatch) ? mMatch : null;
+            if (mKey) {
+              vmapMonth[key][mKey] = (vmapMonth[key][mKey] || 0) + v.jumlah;
+            }
+          }
+        });
+
+        let savePristine = (addrStr) => {
+          if (!(addrStr in targetWorkbook.pristinePenilaianCells)) {
+            targetWorkbook.pristinePenilaianCells[addrStr] = penWs[addrStr] ? { ...penWs[addrStr] } : null;
+          }
+        };
+
+        for (let code in penByCode) {
+          let r = penByCode[code];
+
+          if (aggColIdx !== undefined) {
+            let addrStr = XLSX.utils.encode_cell({ r: r, c: aggColIdx });
+            savePristine(addrStr);
+            let existing = penWs[addrStr] ? parseFloat(penWs[addrStr].v) || 0 : 0;
+            let cv = vmapAgg[code] || 0;
+            penWs[addrStr] = { t: "n", v: existing + cv };
+          }
+
+          if (vmapMonth[code]) {
+            for (let mKey in vmapMonth[code]) {
+              let mColIdx = colMap[`month_${mKey}`];
+              if (mColIdx !== undefined) {
+                let addrStr = XLSX.utils.encode_cell({ r: r, c: mColIdx });
+                savePristine(addrStr);
+                let existingM = penWs[addrStr] ? parseFloat(penWs[addrStr].v) || 0 : 0;
+                penWs[addrStr] = { t: "n", v: existingM + vmapMonth[code][mKey] };
+              }
+            }
+          }
+        }
+      };
+
+      // 2) Selalu rekam pristine untuk kolom2 ini agar 'restore' di atas berfungsi
+      //    walau list-nya kosong (penting untuk RESET).
+      const ensurePristineForAggCol = (aggColIdx) => {
+        if (aggColIdx === undefined) return;
+        for (let code in penByCode) {
+          let r = penByCode[code];
+          let addrStr = XLSX.utils.encode_cell({ r: r, c: aggColIdx });
+          if (!(addrStr in targetWorkbook.pristinePenilaianCells)) {
+            targetWorkbook.pristinePenilaianCells[addrStr] = penWs[addrStr] ? { ...penWs[addrStr] } : null;
+          }
+        }
+      };
+      ensurePristineForAggCol(colMap.tolak);
+      ensurePristineForAggCol(colMap.pajak);
+      ensurePristineForAggCol(colMap.kasTunai);
+
+      processList(window.tolakViolations || [], colMap.tolak);
+      processList(window.pajakViolations || [], colMap.pajak);
+      processList(window.kasTunaiViolations || [], colMap.kasTunai);
+
+      if (colMap.total !== undefined && colMap.ketepatan !== undefined) {
+        for (let code in penByCode) {
+          let r = penByCode[code];
+          let kTep = getV(r, colMap.ketepatan);
+          let kKas = getV(r, colMap.kasTunai);
+          let kPj = getV(r, colMap.pajak);
+          let kTol = getV(r, colMap.tolak);
+          let kTb = getV(r, colMap.tanpaBa);
+
+          let newTotal = kTep - kKas * 5 - kPj * 5 - kTol * 5 - kTb * 5;
+          penWs[XLSX.utils.encode_cell({ r: r, c: colMap.total })] = {
+            t: "n",
+            v: newTotal,
+          };
+        }
+      }
+
+      if (typeof updateFormulaCaches === "function") updateFormulaCaches();
+    }
+
+    // Hapus seluruh data violations (tolak/pajak/kasTunai/semua), recalc kolom PENILAIAN,
+    // dan dorong perubahan ke Firestore agar semua perangkat (termasuk Satker) ikut ter-update.
+    async function clearViolationsAndSync(types) {
+      const all = ["tolak", "pajak", "kasTunai"];
+      const targets = types === "all" ? all : (Array.isArray(types) ? types : [types]);
+
+      if (targets.includes("tolak")) {
+        window.tolakViolations = [];
+        window.rawTolakData = null;
+        window.file_tolak = null;
+        await localforage.removeItem("main_workbook_tolakViolations").catch(() => {});
+      }
+      if (targets.includes("pajak")) {
+        window.pajakViolations = [];
+        window.rawPajakData = null;
+        window.file_pajak = null;
+        await localforage.removeItem("main_workbook_pajakViolations").catch(() => {});
+      }
+      if (targets.includes("kasTunai")) {
+        window.kasTunaiViolations = [];
+        window.rawKasTunaiData = null;
+        window.file_kas_tunai = null;
+        await localforage.removeItem("main_workbook_kasTunaiViolations").catch(() => {});
+      }
+
+      // Recalculate kolom PENILAIAN dari nol (pristine) berdasarkan violations yang tersisa
+      recalcPenilaianFromViolations();
+
+      // Dorong perubahan ke Firestore (workbook + violations) agar Perangkat lain ikut update
+      if (typeof saveTargetWorkbookToStorage === "function") {
+        await saveTargetWorkbookToStorage();
+      }
+    }
+    window.clearViolationsAndSync = clearViolationsAndSync;
+
     async function handlePenaltiFile(file) {
       hideError();
       if (UI.namePenalti)
@@ -4122,170 +4328,10 @@
           });
         }
 
-        // Write to PENILAIAN immediately if present
-        if (targetWorkbook && targetWorkbook.Sheets["PENILAIAN"]) {
-          let penWs = targetWorkbook.Sheets["PENILAIAN"];
-          let pRange = XLSX.utils.decode_range(penWs["!ref"]);
-          let colMap = {};
-
-          for (let R = 0; R <= Math.min(10, pRange.e.r); R++) {
-            for (let C = 0; C <= pRange.e.c; C++) {
-              let cell = penWs[XLSX.utils.encode_cell({ r: R, c: C })];
-              if (!cell || !cell.v || typeof cell.v !== "string") continue;
-              let val = cell.v.toUpperCase().trim();
-
-              // Detect Satker Code Column
-              if ((val.includes("KODE SATKER") || val === "SATKER") && !colMap.satker)
-                colMap.satker = C;
-
-              // Detect Penalty Columns (Aggregate)
-              if ((val === "TOLAK" || val.includes("TOLAK LPJ") || val.includes("PENOLAKAN")) && !colMap.tolak)
-                colMap.tolak = C;
-              if (val.includes("JUMLAH KETEPATAN") && !colMap.ketepatan)
-                colMap.ketepatan = C;
-              if ((val.includes("KAS TUNAI") || val.includes("KAS_TUNAI") || val.includes(">50") || val.includes("> 50")) && !colMap.kasTunai)
-                colMap.kasTunai = C;
-              if (val.includes("PAJAK") && !val.includes("TEPAT") && !colMap.pajak)
-                colMap.pajak = C;
-              if ((val.includes("TANPA BA") || val === "TANPA" || val.includes("TANPA_BA")) && !val.includes(">50") && !colMap.tanpaBa)
-                colMap.tanpaBa = C;
-              if (val.includes("TOTAL NILAI") && !colMap.total)
-                colMap.total = C;
-
-              // Detect Monthly Columns (e.g., "NILAI - JAN" or just "JAN")
-              const months = ["JAN", "FEB", "MAR", "APR", "MEI", "JUN", "JUL", "AGU", "SEP", "OKT", "NOV", "DES"];
-              months.forEach(m => {
-                if ((val === m || val.includes(`NILAI - ${m}`) || val.includes(`PENALTI ${m}`)) && !colMap[`month_${m}`]) {
-                  colMap[`month_${m}`] = C;
-                }
-              });
-            }
-          }
-
-          if (colMap.satker !== undefined) {
-            let penByCode = {};
-            for (let R = 0; R <= pRange.e.r; R++) {
-              let cell =
-                penWs[XLSX.utils.encode_cell({ r: R, c: colMap.satker })];
-              if (!cell || cell.v == null) continue;
-              let code = _normSatker(cell.v);
-              if (code) penByCode[code] = R;
-            }
-
-            // 1) Restore pristine cells if available, to prevent accumulation
-            if (!targetWorkbook.pristinePenilaianCells) {
-              targetWorkbook.pristinePenilaianCells = {};
-            } else {
-              for (let addr in targetWorkbook.pristinePenilaianCells) {
-                let pristineCell = targetWorkbook.pristinePenilaianCells[addr];
-                if (pristineCell === null) {
-                  delete penWs[addr];
-                } else {
-                  penWs[addr] = { ...pristineCell };
-                }
-              }
-            }
-
-            let getV = (r, c) => {
-              if (c === undefined) return 0;
-              let addr = XLSX.utils.encode_cell({ r: r, c: c });
-              return penWs[addr] ? parseFloat(penWs[addr].v) || 0 : 0;
-            };
-
-            let processList = (list, aggColIdx) => {
-              if (!list || list.length === 0) return;
-
-              // Aggregated by satker and month
-              let vmapAgg = {}; // { satker: total }
-              let vmapMonth = {}; // { satker: { month: total } }
-
-              list.forEach((v) => {
-                const key = v.satker;
-                vmapAgg[key] = (vmapAgg[key] || 0) + v.jumlah;
-
-                if (!vmapMonth[key]) vmapMonth[key] = {};
-
-                if (v.monthData) {
-                  for (let mKey in v.monthData) {
-                    if (v.monthData[mKey].val > 0) {
-                      vmapMonth[key][mKey] = (vmapMonth[key][mKey] || 0) + v.monthData[mKey].val;
-                    }
-                  }
-                } else {
-                  const mMatch = String(v.periode || "").toUpperCase().trim().substring(0, 3);
-                  const months = ["JAN", "FEB", "MAR", "APR", "MEI", "JUN", "JUL", "AGU", "SEP", "OKT", "NOV", "DES"];
-                  const mKey = months.includes(mMatch) ? mMatch : null;
-                  if (mKey) {
-                    vmapMonth[key][mKey] = (vmapMonth[key][mKey] || 0) + v.jumlah;
-                  }
-                }
-              });
-
-              let savePristine = (addrStr) => {
-                if (!(addrStr in targetWorkbook.pristinePenilaianCells)) {
-                  targetWorkbook.pristinePenilaianCells[addrStr] = penWs[addrStr] ? { ...penWs[addrStr] } : null;
-                }
-              };
-
-              for (let code in penByCode) {
-                let r = penByCode[code];
-
-                // Update Aggregate Column
-                if (aggColIdx !== undefined) {
-                  let addrStr = XLSX.utils.encode_cell({ r: r, c: aggColIdx });
-                  savePristine(addrStr);
-                  let existing = penWs[addrStr] ? parseFloat(penWs[addrStr].v) || 0 : 0;
-                  let cv = vmapAgg[code] || 0;
-                  penWs[addrStr] = { t: "n", v: existing + cv };
-                }
-
-                // Update Monthly Columns
-                if (vmapMonth[code]) {
-                  for (let mKey in vmapMonth[code]) {
-                    let mColIdx = colMap[`month_${mKey}`];
-                    if (mColIdx !== undefined) {
-                      let addrStr = XLSX.utils.encode_cell({ r: r, c: mColIdx });
-                      savePristine(addrStr);
-                      let existingM = penWs[addrStr] ? parseFloat(penWs[addrStr].v) || 0 : 0;
-                      penWs[addrStr] = { t: "n", v: existingM + vmapMonth[code][mKey] };
-                    }
-                  }
-                }
-              }
-            };
-
-            // Process using GLOBAL state so that we always inject all known penalties!
-            processList(window.tolakViolations || [], colMap.tolak);
-            processList(window.pajakViolations || [], colMap.pajak);
-            processList(window.kasTunaiViolations || [], colMap.kasTunai);
-
-            // Recalculate totals
-            if (
-              colMap.total !== undefined &&
-              colMap.ketepatan !== undefined
-            ) {
-              for (let code in penByCode) {
-                let r = penByCode[code];
-                let kTep = getV(r, colMap.ketepatan);
-                let kKas = getV(r, colMap.kasTunai);
-                let kPj = getV(r, colMap.pajak);
-                let kTol = getV(r, colMap.tolak);
-                let kTb = getV(r, colMap.tanpaBa);
-
-                let newTotal = kTep - kKas * 5 - kPj * 5 - kTol * 5 - kTb * 5;
-                penWs[XLSX.utils.encode_cell({ r: r, c: colMap.total })] = {
-                  t: "n",
-                  v: newTotal,
-                };
-              }
-            }
-
-            if (typeof saveTargetWorkbookToStorage === "function")
-              saveTargetWorkbookToStorage();
-            if (typeof updateFormulaCaches === "function")
-              updateFormulaCaches();
-          }
-        }
+        // Write to PENILAIAN immediately if present (recalc dari pristine, hindari double)
+        recalcPenilaianFromViolations();
+        if (typeof saveTargetWorkbookToStorage === "function")
+          saveTargetWorkbookToStorage();
 
         let msgs = [];
         if (tolakList.length > 0) {
@@ -4659,39 +4705,39 @@
 
     window.resetPajakTab = function () {
       if (!confirm("Apakah Anda yakin ingin mereset data Peringatan Pajak?")) return;
-      window.file_pajak = null;
-      window.rawPajakData = null;
-      window.pajakViolations = null;
-      renderPivotPenaltiTable(
-        "pajak-table-container",
-        null,
-        "Data kepatuhan pajak kosong atau telah direset.",
-      );
-      showToast("Data Peringatan Pajak berhasil direset.", "success");
+      clearViolationsAndSync("pajak").then(() => {
+        renderPivotPenaltiTable(
+          "pajak-table-container",
+          null,
+          "Data kepatuhan pajak kosong atau telah direset.",
+        );
+        if (typeof renderDashboardAnalytics === "function") renderDashboardAnalytics();
+        showToast("Data Peringatan Pajak berhasil direset & disinkronkan.", "success");
+      });
     };
     window.resetTolakTab = function () {
       if (!confirm("Apakah Anda yakin ingin mereset data Penolakan LPJ?")) return;
-      window.file_tolak = null;
-      window.rawTolakData = null;
-      window.tolakViolations = null;
-      renderPivotPenaltiTable(
-        "tolak-table-container",
-        null,
-        "Data penolakan LPJ kosong atau telah direset.",
-      );
-      showToast("Data Penolakan LPJ berhasil direset.", "success");
+      clearViolationsAndSync("tolak").then(() => {
+        renderPivotPenaltiTable(
+          "tolak-table-container",
+          null,
+          "Data penolakan LPJ kosong atau telah direset.",
+        );
+        if (typeof renderDashboardAnalytics === "function") renderDashboardAnalytics();
+        showToast("Data Penolakan LPJ berhasil direset & disinkronkan.", "success");
+      });
     };
     window.resetKasTunaiTab = function () {
       if (!confirm("Apakah Anda yakin ingin mereset data Kas Tunai?")) return;
-      window.file_kas_tunai = null;
-      window.rawKasTunaiData = null;
-      window.kasTunaiViolations = null;
-      renderPivotPenaltiTable(
-        "kas-tunai-table-container",
-        null,
-        "Data penalti Kas Tunai kosong atau telah direset.",
-      );
-      showToast("Data Kas Tunai berhasil direset.", "success");
+      clearViolationsAndSync("kasTunai").then(() => {
+        renderPivotPenaltiTable(
+          "kas-tunai-table-container",
+          null,
+          "Data penalti Kas Tunai kosong atau telah direset.",
+        );
+        if (typeof renderDashboardAnalytics === "function") renderDashboardAnalytics();
+        showToast("Data Kas Tunai berhasil direset & disinkronkan.", "success");
+      });
     };
 
     window.resetAutoTab = function () {
@@ -4718,7 +4764,10 @@
           "targetWorkbookBase64Local",
           "workbook_pajak",
           "workbook_tolak",
-          "workbook_kas_tunai"
+          "workbook_kas_tunai",
+          "main_workbook_tolakViolations",
+          "main_workbook_pajakViolations",
+          "main_workbook_kasTunaiViolations"
         ];
 
         let promises = [];
@@ -4738,6 +4787,17 @@
         if (promises.length > 0) {
           await Promise.all(promises);
         }
+
+        // Reset workbook ke template kosong & dorong ke Firestore agar
+        // Perangkat lain (mis. Satker) tidak menerima data lama lagi
+        try {
+          if (typeof generateDefaultTemplate === "function") generateDefaultTemplate();
+          if (typeof recalcPenilaianFromViolations === "function") recalcPenilaianFromViolations();
+          if (typeof saveTargetWorkbookToStorage === "function") await saveTargetWorkbookToStorage();
+        } catch (e) {
+          console.warn("Gagal mendorong reset ke Firestore:", e);
+        }
+
         localStorage.removeItem("lastActiveTab");
         showToast("Data berhasil direset. Memuat ulang...", "success");
         setTimeout(() => {
@@ -8280,9 +8340,17 @@
             await localforage.removeItem("targetWorkbookBuffer");
             await localforage.removeItem("targetWorkbookBase64");
             await localforage.removeItem("targetWorkbookName");
+            await localforage.removeItem("main_workbook_tolakViolations");
+            await localforage.removeItem("main_workbook_pajakViolations");
+            await localforage.removeItem("main_workbook_kasTunaiViolations");
 
             parsedData = [];
             window.pajakViolations = [];
+            window.tolakViolations = [];
+            window.kasTunaiViolations = [];
+            window.rawPajakData = null;
+            window.rawTolakData = null;
+            window.rawKasTunaiData = null;
 
             UI.inputLpj.value = "";
             UI.nameLpj.textContent = "Belum ada file dipilih";
@@ -8304,15 +8372,24 @@
 
             checkCanPreview();
             renderTabs();
+            recalcPenilaianFromViolations();
             renderDashboardAnalytics();
             switchTab("AUTO");
+
+            // Dorong template kosong + violations kosong ke Firestore
+            // agar semua perangkat (termasuk Satker) ikut tereset
+            if (typeof saveTargetWorkbookToStorage === "function") {
+              await saveTargetWorkbookToStorage();
+            }
+
             showToast(
-              "Tabel berhasil direset, silakan upload LPJ kembali.",
+              "Tabel berhasil direset & disinkronkan, silakan upload LPJ kembali.",
               "success",
             );
           },
         );
       });
+
 
     const btnResetPenilaian = document.getElementById("btn-reset-penilaian");
     if (btnResetPenilaian) {
@@ -8328,9 +8405,17 @@
             await localforage.removeItem("targetWorkbookBuffer");
             await localforage.removeItem("targetWorkbookBase64");
             await localforage.removeItem("targetWorkbookName");
+            await localforage.removeItem("main_workbook_tolakViolations");
+            await localforage.removeItem("main_workbook_pajakViolations");
+            await localforage.removeItem("main_workbook_kasTunaiViolations");
 
             parsedData = [];
             window.pajakViolations = [];
+            window.tolakViolations = [];
+            window.kasTunaiViolations = [];
+            window.rawPajakData = null;
+            window.rawTolakData = null;
+            window.rawKasTunaiData = null;
 
             UI.inputLpj.value = "";
             UI.nameLpj.textContent = "Belum ada file dipilih";
@@ -8352,10 +8437,16 @@
 
             checkCanPreview();
             renderTabs();
+            recalcPenilaianFromViolations();
             renderDashboardAnalytics();
             switchTab("AUTO");
+
+            if (typeof saveTargetWorkbookToStorage === "function") {
+              await saveTargetWorkbookToStorage();
+            }
+
             showToast(
-              "Tabel berhasil direset, silakan upload LPJ kembali.",
+              "Tabel berhasil direset & disinkronkan, silakan upload LPJ kembali.",
               "success",
             );
           },
